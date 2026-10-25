@@ -20,7 +20,7 @@ with st.sidebar:
 
 
     n_villes = st.slider(
-        "Nombre de villes (n)",
+        "Nombre de villes",
         min_value=5, max_value=30, value=12, step=1,
         help="Taille du problème.",
     )
@@ -30,14 +30,38 @@ with st.sidebar:
         min_value=0, max_value=999, value=42, step=1,
     )
 
+
+    p_edges = st.slider(
+        "Densité d'arêtes",
+        min_value=0.1, max_value=1.0, value=0.3, step=0.1,
+        help="Probabilité d'ajouter chaque arête manquante. "
+             "p=1.0 → graphe complet (TSP classique).",
+    )
+
+    col_bmin, col_bmax = st.columns(2)
+    bound_min = col_bmin.number_input(
+        "Zone : min",
+        min_value=0.0, max_value=100.0, value=0.0, step=1.0,
+    )
+    bound_max = col_bmax.number_input(
+        "Zone : max",
+        min_value=0.0, max_value=200.0, value=100.0, step=1.0,
+    )
+    bounds = (bound_min, bound_max)
+
+
     # ------------------------------------------------------------
     #  Instance : génération / régénération du graphe
     # ------------------------------------------------------------
     if "tsp" not in st.session_state:
-        st.session_state["tsp"] = generate_tsp(n_villes, p_edges=0.3,bounds=(0,100), seed=graine)
+        st.session_state["tsp"] = generate_tsp(
+            n_villes, p_edges=p_edges, bounds=bounds, seed=graine
+        )
 
     if st.session_state.get("regenerer", False):
-        st.session_state["tsp"] = generate_tsp(n_villes, p_edges=0.3, bounds=(0,100), seed=graine)
+        st.session_state["tsp"] = generate_tsp(
+            n_villes, p_edges=p_edges, bounds=bounds, seed=graine
+        )
         st.session_state["regenerer"] = False
         st.session_state.pop("resultat", None)
 
@@ -150,13 +174,12 @@ st.subheader("Convergence")
 # ------------------------------------------------------------
 with st.expander("🔎 Valeurs récupérées de l'interface (debug)"):
     valeurs = {
-        # Instance
         "n_villes": n_villes,
         "graine": graine,
-        # Paramètres 
+        "p_edges": p_edges,
+        "bounds": list(bounds),        # tuple non sérialisable pour st.json
         "nb_fourmis": nb_fourmis,
         "nb_iterations": nb_iterations,
-        # Contrôles
         "lancer": lancer,
         "reinit": reinit,
     }
