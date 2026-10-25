@@ -88,6 +88,37 @@ with st.sidebar:
     )
 
  
+    # --------------------------------------------------------
+    #  Barre latérale — Paramètres ACO
+    # --------------------------------------------------------
+    st.subheader("Paramètres ACO")
+
+    col_a, col_b = st.columns(2)
+    alpha = col_a.slider(
+        "α — poids des phéromones",
+        min_value=0.0, max_value=3.0, value=1.0, step=0.1,
+        help="Influence des phéromones sur le choix de la ville suivante. "
+             "Élevé = exploitation des pistes existantes.",
+    )
+    beta = col_b.slider(
+        "β — poids de la distance",
+        min_value=0.0, max_value=5.0, value=2.0, step=0.1,
+        help="Influence de la proximité (1/distance). "
+             "Élevé = comportement glouton, fourmis attirées par les villes proches.",
+    )
+
+    col_r, col_q = st.columns(2)
+    rho = col_r.slider(
+        "ρ — évaporation",
+        min_value=0.0, max_value=1.0, value=0.2, step=0.1,
+        help="Taux d'évaporation par itération. Élevé = mémoire courte.",
+    )
+    Q = col_q.number_input(
+        "Q — dépôt de phéromone",
+        min_value=1.0, max_value=1000.0, value=100.0, step=1.0,
+        help="Quantité déposée, proportionnelle à Q / coût de la tournée.",
+    )
+
 
     # --------------------------------------------------------
     #  Barre latérale — Préréglages et lancement
@@ -113,20 +144,37 @@ st.markdown(
 )
 
 
+# ------------------------------------------------------------
+#  Lancement de l'ACO
+# ------------------------------------------------------------
 if lancer:
-    st.info("▶ Lancement demandé")
- 
     G = st.session_state["tsp"]
 
-    t0 = time.perf_counter()
-    tour, cost = ACO_search(G, N_ants=nb_fourmis, max_iter=nb_iterations)
-    t_exec = time.perf_counter() - t0
+    with st.status("🐜 Exécution de l'ACO en cours…", expanded=True) as status:
+        t0 = time.perf_counter()
+        tour, cost = ACO_search(
+            G,
+            N_ants=nb_fourmis,
+            max_iter=nb_iterations,
+            alpha=alpha,
+            beta=beta,
+            rho=rho,
+            Q=Q,
+        )
+        t_exec = time.perf_counter() - t0
+
+        status.update(
+            label=f"✅ Terminé en {t_exec:.2f} s",
+            state="complete",
+        )
 
     st.session_state["resultat"] = {
         "tour": tour,
         "cost": cost,
         "temps": t_exec,
         "algo": "ACO",
+        "params": {"nb_fourmis": nb_fourmis, "nb_iterations": nb_iterations,
+                   "alpha": alpha, "beta": beta, "rho": rho, "Q": Q},
     }
 
 # ------------------------------------------------------------
@@ -160,9 +208,23 @@ with col_carte:
 
  
   
-
 with col_stats:
     st.subheader("Statistiques")
+
+    if "resultat" in st.session_state:
+        res = st.session_state["resultat"]
+
+        st.metric("Longueur de la meilleure tournée", f"{res['cost']:.2f}")
+        st.metric("Temps d'exécution", f"{res['temps']:.2f} s")
+
+        # Vérification avec tour_cost
+        pos = nx.get_node_attributes(st.session_state["tsp"], "pos")
+        st.caption(f"Vérification tour_cost : {tour_cost(res['tour'], pos):.2f}")
+
+        # Paramètres utilisés
+        st.caption(f"Paramètres : {res['params']}")
+    else:
+        st.info("Aucun résultat. Cliquez sur ▶ Lancer.")
 
 st.subheader("Convergence")
  
@@ -177,9 +239,13 @@ with st.expander("🔎 Valeurs récupérées de l'interface (debug)"):
         "n_villes": n_villes,
         "graine": graine,
         "p_edges": p_edges,
-        "bounds": list(bounds),        # tuple non sérialisable pour st.json
+        "bounds": list(bounds),
         "nb_fourmis": nb_fourmis,
         "nb_iterations": nb_iterations,
+        "alpha": alpha,
+        "beta": beta,
+        "rho": rho,
+        "Q": Q,
         "lancer": lancer,
         "reinit": reinit,
     }
