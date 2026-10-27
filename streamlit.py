@@ -209,24 +209,34 @@ with col_carte:
  
   
 with col_stats:
-    st.subheader("Statistiques")
+    st.subheader("Statistiques de l'instance")
 
     if "resultat" in st.session_state:
         res = st.session_state["resultat"]
+        G = st.session_state["tsp"]
 
-        st.metric("Longueur de la meilleure tournée", f"{res['cost']:.2f}")
+        st.metric("Longueur de la tournée", f"{res['cost']:.2f}")
         st.metric("Temps d'exécution", f"{res['temps']:.2f} s")
 
-        # Vérification avec tour_cost
-        pos = nx.get_node_attributes(st.session_state["tsp"], "pos")
-        st.caption(f"Vérification tour_cost : {tour_cost(res['tour'], pos):.2f}")
+        col_s1, col_s2 = st.columns(2)
+        col_s1.metric("Villes", G.number_of_nodes())
+        col_s2.metric("Arêtes", G.number_of_edges())
+        col_s1.metric("Temps / itération", f"{1000 * res['temps'] / nb_iterations:.1f} ms")
+        col_s2.metric("Longueur / ville", f"{res['cost'] / G.number_of_nodes():.2f}")
 
-        # Paramètres utilisés
-        st.caption(f"Paramètres : {res['params']}")
+        with st.expander("Détails de l'instance"):
+            poids = [d["weight"] for _, _, d in G.edges(data=True)]
+            st.json({
+                "densité": round(nx.density(G), 3),
+                "distance_min": min(poids),
+                "distance_max": max(poids),
+                "distance_moyenne": round(sum(poids) / len(poids), 2),
+                "connexe": nx.is_connected(G),
+            })
     else:
         st.info("Aucun résultat. Cliquez sur ▶ Lancer.")
 
-st.subheader("Convergence")
+ 
  
 
 
