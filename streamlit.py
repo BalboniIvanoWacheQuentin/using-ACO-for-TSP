@@ -1,11 +1,9 @@
 
-
 import streamlit as st
 
-
-st.navigation([
+pg = st.navigation([
     st.Page("Fourmis.py", title="Démonstrateur", icon="🐜", default=True),
     st.Page("Analyse.py", title="Analyse", icon="📊"),
 ])
 
-
+pg.run()
