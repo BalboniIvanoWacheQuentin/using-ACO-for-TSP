@@ -3,7 +3,10 @@ from algorithms import*
 import streamlit as st
 
 
-
+st.navigation([
+    st.Page("streamlit.py", title="🐜 Démonstrateur", icon="🐜", default=True),
+    st.Page("Analyse.py", title="📊 Analyse", icon="📊"),
+])
 
 # ============================================================
 # TP 6 — Colonies de fourmis
