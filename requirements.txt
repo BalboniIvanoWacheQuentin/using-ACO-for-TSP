@@ -3,3 +3,4 @@ networkx>=3.0
 matplotlib>=3.7.0
 streamlit>=1.30.0
 plotly
+PyPDF2
