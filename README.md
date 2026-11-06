@@ -26,6 +26,7 @@ pip install -r requirements.txt -r requirements-experiences.txt
 | Commande | Résultat | Durée |
 |---|---|---|
 | `python experiments.py` | Étude des paramètres (30 villes, 10 graines) : `runs.csv`, `history.csv` | quelques minutes |
+| `python subject.py` | Ant System face à l'optimum exact (Held-Karp, 8 à 16 villes) et selon la taille, jusqu'à 150 villes (`results/subject.csv`, `results/figures/subject_size.png`) | ≈ 5 min |
 | `python accuracy_time.py complexity` | Complexité, n = 25 à 1 600 (`results/complexity.csv`) | ≈ 5 min |
 | `python accuracy_time.py anytime rat783` | Précision vs temps (budget 60 s) sur une instance (`results/anytime_rat783.csv`) ; sans nom, les 5 instances à la suite | ≈ 20 min par instance |
 | `python dynamic.py rat783` | TSP dynamique (20 % des routes ralenties en cours de calcul) : reprise à chaud ou à froid (`results/dynamic_rat783.csv`) ; sans nom, kroA100 et rat783 | ≈ 7 min par instance |
