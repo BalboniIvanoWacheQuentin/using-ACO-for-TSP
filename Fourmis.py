@@ -1,4 +1,7 @@
+import importlib
 import streamlit as st
+import algorithms
+importlib.reload(algorithms)   # Streamlit Cloud garde l'ancien module en memoire apres une mise a jour
 from algorithms import*
 
 
@@ -283,8 +286,10 @@ if "resultat" in st.session_state:
         for j in range(i + 1, len(tau)):
             if w[i, j] > 0.05:
                 ax.plot(*xy[[i, j]].T, color="#e74c3c", lw=6 * w[i, j], alpha=w[i, j])
+    aco_cycle = hist["best_tour"][it - 1] + [hist["best_tour"][it - 1][0]]
+    ax.plot(*xy[aco_cycle].T, color="#2c3e50", lw=1.5, zorder=2)   # trait fin : phéromones visibles
     ax.scatter(*xy.T, s=60, color="#3498db", zorder=3)
-    ax.set_title(f"ACO : phéromones (épaisseur), meilleur {best[it - 1]:.0f}")
+    ax.set_title(f"ACO : phéromones (rouge), meilleur cycle (noir), {best[it - 1]:.0f}")
     ax.axis("off")
     col_e1.pyplot(fig)
     plt.close(fig)

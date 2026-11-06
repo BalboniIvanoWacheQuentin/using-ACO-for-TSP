@@ -134,6 +134,7 @@ def ACO_search(G, N_ants=20, max_iter=100, alpha=1.0, beta=2.0, rho=0.2, Q=100.0
       branching : facteur de lambda-branchement (diversite de la recherche)
       time      : temps ecoule depuis le debut (s)
       tau       : matrice des pheromones apres l'iteration
+      best_tour : meilleur cycle trouve depuis le debut
     '''
     random.seed(seed)
     np.random.seed(seed)
@@ -147,7 +148,8 @@ def ACO_search(G, N_ants=20, max_iter=100, alpha=1.0, beta=2.0, rho=0.2, Q=100.0
 
     pheromones = np.ones((n, n)) * 0.1
     best_tour, best_cost = None, float("inf")
-    history = {"best": [], "iter_best": [], "mean": [], "branching": [], "time": [], "tau": []}
+    history = {"best": [], "iter_best": [], "mean": [], "branching": [], "time": [], "tau": [],
+               "best_tour": []}
     t0 = time.perf_counter()
 
     for _ in range(max_iter):
@@ -196,6 +198,7 @@ def ACO_search(G, N_ants=20, max_iter=100, alpha=1.0, beta=2.0, rho=0.2, Q=100.0
         history["branching"].append(branching_factor(pheromones))
         history["time"].append(time.perf_counter() - t0)
         history["tau"].append(pheromones.copy())      # pour visualiser les pistes au fil des iterations
+        history["best_tour"].append(list(best_tour))  # meilleur cycle trouve jusqu'ici
 
     return best_tour, best_cost, history
 
