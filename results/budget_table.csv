@@ -1,0 +1,151 @@
+instance,algo,budget_s,gap_pct
+eil51,Plus proche voisin,0.01,19.95
+eil51,Plus proche voisin,0.1,19.95
+eil51,Plus proche voisin,1.0,19.95
+eil51,Plus proche voisin,10.0,19.95
+eil51,Plus proche voisin,30.0,19.95
+eil51,PPV + 2-opt,0.01,2.11
+eil51,PPV + 2-opt,0.1,2.11
+eil51,PPV + 2-opt,1.0,2.11
+eil51,PPV + 2-opt,10.0,2.11
+eil51,PPV + 2-opt,30.0,2.11
+eil51,Christofides,0.01,
+eil51,Christofides,0.1,8.45
+eil51,Christofides,1.0,8.45
+eil51,Christofides,10.0,8.45
+eil51,Christofides,30.0,8.45
+eil51,Recuit simulé,0.01,28.25
+eil51,Recuit simulé,0.1,6.65
+eil51,Recuit simulé,1.0,2.5
+eil51,Recuit simulé,10.0,1.49
+eil51,Recuit simulé,30.0,1.49
+eil51,OR-Tools,0.01,
+eil51,OR-Tools,0.1,
+eil51,OR-Tools,1.0,1.88
+eil51,OR-Tools,10.0,0.94
+eil51,OR-Tools,30.0,0.23
+eil51,ACO AS,0.01,93.19
+eil51,ACO AS,0.1,19.09
+eil51,ACO AS,1.0,8.37
+eil51,ACO AS,10.0,5.24
+eil51,ACO AS,30.0,4.38
+eil51,ACO ACS,0.01,
+eil51,ACO ACS,0.1,10.64
+eil51,ACO ACS,1.0,2.43
+eil51,ACO ACS,10.0,0.86
+eil51,ACO ACS,30.0,0.39
+eil51,ACO MMAS,0.01,93.19
+eil51,ACO MMAS,0.1,82.24
+eil51,ACO MMAS,1.0,38.34
+eil51,ACO MMAS,10.0,0.55
+eil51,ACO MMAS,30.0,0.39
+eil51,ACO MMAS + 2-opt,0.01,
+eil51,ACO MMAS + 2-opt,0.1,2.27
+eil51,ACO MMAS + 2-opt,1.0,0.08
+eil51,ACO MMAS + 2-opt,10.0,0.08
+eil51,ACO MMAS + 2-opt,30.0,0.08
+eil51,2-opt multi-départs,0.01,
+eil51,2-opt multi-départs,0.1,2.9
+eil51,2-opt multi-départs,1.0,1.17
+eil51,2-opt multi-départs,10.0,0.55
+eil51,2-opt multi-départs,30.0,0.08
+kroA100,Plus proche voisin,0.01,30.66
+kroA100,Plus proche voisin,0.1,30.66
+kroA100,Plus proche voisin,1.0,30.66
+kroA100,Plus proche voisin,10.0,30.66
+kroA100,Plus proche voisin,30.0,30.66
+kroA100,PPV + 2-opt,0.01,2.99
+kroA100,PPV + 2-opt,0.1,2.99
+kroA100,PPV + 2-opt,1.0,2.99
+kroA100,PPV + 2-opt,10.0,2.99
+kroA100,PPV + 2-opt,30.0,2.99
+kroA100,Christofides,0.01,
+kroA100,Christofides,0.1,9.45
+kroA100,Christofides,1.0,9.45
+kroA100,Christofides,10.0,9.45
+kroA100,Christofides,30.0,9.45
+kroA100,Recuit simulé,0.01,84.09
+kroA100,Recuit simulé,0.1,10.17
+kroA100,Recuit simulé,1.0,1.95
+kroA100,Recuit simulé,10.0,0.78
+kroA100,Recuit simulé,30.0,0.78
+kroA100,OR-Tools,0.01,
+kroA100,OR-Tools,0.1,5.39
+kroA100,OR-Tools,1.0,0.84
+kroA100,OR-Tools,10.0,0.0
+kroA100,OR-Tools,30.0,0.0
+kroA100,ACO AS,0.01,
+kroA100,ACO AS,0.1,100.17
+kroA100,ACO AS,1.0,15.11
+kroA100,ACO AS,10.0,8.39
+kroA100,ACO AS,30.0,6.78
+kroA100,ACO ACS,0.01,
+kroA100,ACO ACS,0.1,20.54
+kroA100,ACO ACS,1.0,10.33
+kroA100,ACO ACS,10.0,4.13
+kroA100,ACO ACS,30.0,2.34
+kroA100,ACO MMAS,0.01,
+kroA100,ACO MMAS,0.1,130.57
+kroA100,ACO MMAS,1.0,109.65
+kroA100,ACO MMAS,10.0,6.07
+kroA100,ACO MMAS,30.0,1.7
+kroA100,ACO MMAS + 2-opt,0.01,
+kroA100,ACO MMAS + 2-opt,0.1,
+kroA100,ACO MMAS + 2-opt,1.0,0.24
+kroA100,ACO MMAS + 2-opt,10.0,-0.0
+kroA100,ACO MMAS + 2-opt,30.0,-0.0
+kroA100,2-opt multi-départs,0.01,
+kroA100,2-opt multi-départs,0.1,
+kroA100,2-opt multi-départs,1.0,1.2
+kroA100,2-opt multi-départs,10.0,0.35
+kroA100,2-opt multi-départs,30.0,0.16
+ch150,Plus proche voisin,0.01,25.47
+ch150,Plus proche voisin,0.1,25.47
+ch150,Plus proche voisin,1.0,25.47
+ch150,Plus proche voisin,10.0,25.47
+ch150,Plus proche voisin,30.0,25.47
+ch150,PPV + 2-opt,0.01,
+ch150,PPV + 2-opt,0.1,1.41
+ch150,PPV + 2-opt,1.0,1.41
+ch150,PPV + 2-opt,10.0,1.41
+ch150,PPV + 2-opt,30.0,1.41
+ch150,Christofides,0.01,
+ch150,Christofides,0.1,
+ch150,Christofides,1.0,10.02
+ch150,Christofides,10.0,10.02
+ch150,Christofides,30.0,10.02
+ch150,Recuit simulé,0.01,
+ch150,Recuit simulé,0.1,17.1
+ch150,Recuit simulé,1.0,6.33
+ch150,Recuit simulé,10.0,0.88
+ch150,Recuit simulé,30.0,0.88
+ch150,OR-Tools,0.01,
+ch150,OR-Tools,0.1,12.55
+ch150,OR-Tools,1.0,2.54
+ch150,OR-Tools,10.0,2.1
+ch150,OR-Tools,30.0,0.75
+ch150,ACO AS,0.01,
+ch150,ACO AS,0.1,179.62
+ch150,ACO AS,1.0,19.85
+ch150,ACO AS,10.0,8.21
+ch150,ACO AS,30.0,6.99
+ch150,ACO ACS,0.01,
+ch150,ACO ACS,0.1,22.5
+ch150,ACO ACS,1.0,12.49
+ch150,ACO ACS,10.0,4.59
+ch150,ACO ACS,30.0,3.29
+ch150,ACO MMAS,0.01,
+ch150,ACO MMAS,0.1,179.62
+ch150,ACO MMAS,1.0,165.9
+ch150,ACO MMAS,10.0,24.86
+ch150,ACO MMAS,30.0,1.71
+ch150,ACO MMAS + 2-opt,0.01,
+ch150,ACO MMAS + 2-opt,0.1,
+ch150,ACO MMAS + 2-opt,1.0,5.23
+ch150,ACO MMAS + 2-opt,10.0,0.37
+ch150,ACO MMAS + 2-opt,30.0,0.27
+ch150,2-opt multi-départs,0.01,
+ch150,2-opt multi-départs,0.1,
+ch150,2-opt multi-départs,1.0,5.59
+ch150,2-opt multi-départs,10.0,3.66
+ch150,2-opt multi-départs,30.0,2.29

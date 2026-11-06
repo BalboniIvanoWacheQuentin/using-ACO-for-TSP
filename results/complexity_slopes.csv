@@ -1,0 +1,8 @@
+algo,pente_mesuree,theorie
+Plus proche voisin,1.34,2
+PPV + 2-opt,2.92,2 par passe (~3 au total)
+Christofides,2.87,3
+Recuit simulé,1.05,1 à 2 (n it. x (O(1) + inversion O(n)))
+ACO AS (10 it.),1.73,2 (m fixe)
+ACO MMAS + 2-opt (10 it.),3.08,2 + 2-opt
+Held-Karp (exact),x2.09 par ville,"O(n² 2ⁿ) : x2,3 vers n = 15"

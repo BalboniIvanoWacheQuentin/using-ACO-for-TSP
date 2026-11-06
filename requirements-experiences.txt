@@ -1,0 +1,6 @@
+# Dépendances des scripts d'expériences (pas nécessaires pour l'application Streamlit)
+#   pip install -r requirements.txt -r requirements-experiences.txt
+pandas>=2.0
+ortools>=9.10
+# PyTorch : la version CPU suffit (toutes les mesures ont été faites sur un seul cœur CPU)
+torch>=2.4

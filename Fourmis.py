@@ -149,7 +149,7 @@ if lancer:
 
     with st.status("🐜 Exécution de l'ACO en cours…", expanded=True) as status:
         t0 = time.perf_counter()
-        tour, cost = ACO_search(
+        tour, cost, history = ACO_search(
             G,
             N_ants=nb_fourmis,
             max_iter=nb_iterations,
@@ -169,6 +169,7 @@ if lancer:
         "tour": tour,
         "cost": cost,
         "temps": t_exec,
+        "history": history,
         "algo": "ACO",
         "params": {"nb_fourmis": nb_fourmis, "nb_iterations": nb_iterations,
                    "alpha": alpha, "beta": beta, "rho": rho, "Q": Q},
@@ -218,7 +219,7 @@ with col_stats:
         col_s1, col_s2 = st.columns(2)
         col_s1.metric("Villes", G.number_of_nodes())
         col_s2.metric("Arêtes", G.number_of_edges())
-        col_s1.metric("Temps / itération", f"{1000 * res['temps'] / nb_iterations:.1f} ms")
+        col_s1.metric("Temps / itération", f"{1000 * res['temps'] / len(res['history']['best']):.1f} ms")
         col_s2.metric("Longueur / ville", f"{res['cost'] / G.number_of_nodes():.2f}")
 
         with st.expander("Détails de l'instance"):
@@ -232,6 +233,26 @@ with col_stats:
             })
     else:
         st.info("Aucun résultat. Cliquez sur ▶ Lancer.")
+
+
+# ------------------------------------------------------------
+#  Convergence au fil des itérations
+# ------------------------------------------------------------
+if "resultat" in st.session_state:
+    hist = st.session_state["resultat"]["history"]
+    best = hist["best"]
+    st.subheader("Convergence")
+    st.caption(
+        f"Meilleure tournée trouvée à l'itération {best.index(min(best)) + 1} / {len(best)}. "
+        "Facteur de branchement : n-1 au départ, proche de 2 quand toutes les fourmis suivent la même piste."
+    )
+    col_c1, col_c2 = st.columns(2)
+    col_c1.line_chart(
+        {"meilleur global": best,
+         "meilleur de l'itération": hist["iter_best"],
+         "moyenne des fourmis": hist["mean"]},
+    )
+    col_c2.line_chart({"facteur de branchement": hist["branching"]})
 
  
  
