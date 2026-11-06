@@ -28,21 +28,23 @@ from aco_variants import aco
 import tsp_classics as tc
 
 torch.set_num_threads(1)
+tc.two_opt(tc.coords_to_dist(np.random.rand(8, 2)), list(range(8)))   # compile numba avant toute mesure
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "results")
 
 # ---- partie 1
-COMPLEXITY_N = [25, 50, 100, 200, 400, 800]
+COMPLEXITY_N = [25, 50, 100, 200, 400, 800, 1600]
 HELD_KARP_N = list(range(6, 17))
 ACO_ANTS = 25
 
 # ---- partie 2
-INSTANCES = {"eil51": 426, "kroA100": 21282, "ch150": 6528}
-BUDGET_S = 30.0
+INSTANCES = {"eil51": 426, "kroA100": 21282, "ch150": 6528, "pcb442": 50778, "rat783": 8806}
+BUDGET_S = 60.0
 SEEDS = [0, 1, 2]
-ORTOOLS_LIMITS = [0.1, 0.3, 1, 3, 10, 30]
-SA_FACTORS = [30, 100, 300, 1000, 3000, 10000, 30000]   # iterations = facteur * n
+ORTOOLS_LIMITS = [0.1, 0.3, 1, 3, 10, 30, 60]
+SA_FACTORS = [30, 100, 300, 1000, 3000, 10000, 30000, 100000]   # iterations = facteur * n
+SA_US_PER_IT = 2.5     # ~2,5 microsecondes par iteration : on saute les reglages qui depassent le budget
 ACO_VARIANTS = [("AS", False), ("ACS", False), ("MMAS", False), ("MMAS", True)]
 
 
@@ -123,17 +125,24 @@ def multistart_2opt(D, budget, seed, batch=8):
     return points
 
 
-def part_anytime():
-    path = os.path.join(RES, "anytime.csv")
+def part_anytime(instances=None):
+    for inst in instances or INSTANCES:
+        anytime_instance(inst, INSTANCES[inst])
+
+
+def anytime_instance(inst, opt):
+    '''un fichier par instance (results/anytime_<inst>.csv) : on peut lancer les instances en parallele'''
+    path = os.path.join(RES, f"anytime_{inst}.csv")
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["instance", "n", "opt", "algo", "seed", "time_s", "cost"])
 
         def row(inst, n, opt, algo, seed, t, cost):
-            w.writerow([inst, n, opt, algo, seed, f"{t:.5f}", round(cost, 3)])
-            f.flush()
+            if np.isfinite(cost):
+                w.writerow([inst, n, opt, algo, seed, f"{t:.5f}", round(cost, 3)])
+                f.flush()
 
-        for inst, opt in INSTANCES.items():
+        if True:
             D = tc.coords_to_dist(tc.load_tsplib(os.path.join(HERE, "data", "tsplib", f"{inst}.tsp")),
                                   tsplib_round=True)
             n = len(D)
@@ -153,6 +162,8 @@ def part_anytime():
                 row(inst, n, opt, "OR-Tools", 0, time.perf_counter() - t0, cost)
                 print(f"[{inst}] OR-Tools ({lim:>4} s)        {cost:10.0f}")
             for k in SA_FACTORS:
+                if k * n * SA_US_PER_IT * 1e-6 > BUDGET_S:
+                    continue
                 for seed in SEEDS:
                     t0 = time.perf_counter()
                     _, cost = tc.simulated_annealing(D, n_iter=k * n, seed=seed)
@@ -183,4 +194,4 @@ if __name__ == "__main__":
     if part in ("all", "complexity"):
         part_complexity()
     if part in ("all", "anytime"):
-        part_anytime()
+        part_anytime(sys.argv[2:])          # ex. : python accuracy_time.py anytime rat783

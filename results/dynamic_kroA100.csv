@@ -1,0 +1,129 @@
+instance,seed,algo,time_s,cost
+kroA100,-1,reference,60.00000,23483.0
+kroA100,0,OR-Tools (à froid),0.10275,26013.0
+kroA100,0,OR-Tools (à froid),0.30173,25032.0
+kroA100,0,OR-Tools (à froid),1.00218,24381.0
+kroA100,0,OR-Tools (à froid),3.00229,24381.0
+kroA100,0,OR-Tools (à froid),10.00248,24102.0
+kroA100,0,OR-Tools (à froid),20.00231,24075.0
+kroA100,0,ancienne tournée (sans rien faire),0.00000,26199.0
+kroA100,0,ACO MMAS + 2-opt (à chaud),0.03999,24228.001
+kroA100,0,ACO MMAS + 2-opt (à chaud),0.12034,24099.999
+kroA100,0,ACO MMAS + 2-opt (à chaud),0.16605,23816.002
+kroA100,0,ACO MMAS + 2-opt (à chaud),0.29227,23721.999
+kroA100,0,ACO MMAS + 2-opt (à chaud),0.33230,23656.001
+kroA100,0,ACO MMAS + 2-opt (à chaud),0.37382,23536.0
+kroA100,0,ACO MMAS + 2-opt (à chaud),0.55327,23468.999
+kroA100,0,ACO MMAS + 2-opt (à chaud),1.23937,23453.001
+kroA100,0,ACO MMAS + 2-opt (à chaud),1.43317,23410.0
+kroA100,0,ACO MMAS + 2-opt (à chaud),1.83570,23409.998
+kroA100,0,ACO MMAS + 2-opt (à chaud),5.29801,23392.997
+kroA100,0,ACO MMAS + 2-opt (à chaud),5.58356,23328.001
+kroA100,0,ACO MMAS + 2-opt (à chaud),5.70364,23327.999
+kroA100,0,ACO MMAS + 2-opt (à chaud),5.86068,23327.997
+kroA100,0,ACO MMAS + 2-opt (à chaud),9.12385,23327.001
+kroA100,0,ACO MMAS + 2-opt (à chaud),9.28747,23307.998
+kroA100,0,ACO MMAS + 2-opt (à chaud),20.00088,23307.998
+kroA100,0,2-opt sur l'ancienne tournée,0.00062,23658.0
+kroA100,0,OR-Tools (à chaud),0.10433,23659.0
+kroA100,0,OR-Tools (à chaud),0.30266,23621.0
+kroA100,0,OR-Tools (à chaud),1.00445,23621.0
+kroA100,0,OR-Tools (à chaud),3.00385,23621.0
+kroA100,0,OR-Tools (à chaud),10.00265,23621.0
+kroA100,0,OR-Tools (à chaud),20.00283,23590.0
+kroA100,0,ACO MMAS + 2-opt (à froid),0.04011,24788.001
+kroA100,0,ACO MMAS + 2-opt (à froid),0.08321,24019.0
+kroA100,0,ACO MMAS + 2-opt (à froid),0.20435,23545.001
+kroA100,0,ACO MMAS + 2-opt (à froid),0.56125,23452.001
+kroA100,0,ACO MMAS + 2-opt (à froid),1.31667,23366.999
+kroA100,0,ACO MMAS + 2-opt (à froid),2.06468,23338.0
+kroA100,0,ACO MMAS + 2-opt (à froid),2.25315,23337.998
+kroA100,0,ACO MMAS + 2-opt (à froid),8.21550,23320.999
+kroA100,0,ACO MMAS + 2-opt (à froid),8.91573,23320.997
+kroA100,0,ACO MMAS + 2-opt (à froid),13.07014,23307.998
+kroA100,0,ACO MMAS + 2-opt (à froid),20.02189,23307.998
+kroA100,0,2-opt multi-départs (à froid),0.00185,24315.0
+kroA100,0,2-opt multi-départs (à froid),0.00273,24143.0
+kroA100,0,2-opt multi-départs (à froid),0.00411,23550.0
+kroA100,0,2-opt multi-départs (à froid),0.10412,23441.0
+kroA100,0,2-opt multi-départs (à froid),0.60304,23398.0
+kroA100,0,2-opt multi-départs (à froid),1.03591,23373.0
+kroA100,0,2-opt multi-départs (à froid),1.36644,23328.0
+kroA100,0,2-opt multi-départs (à froid),20.00009,23328.0
+kroA100,1,ancienne tournée (sans rien faire),0.00000,26199.0
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.03732,24471.998
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.07501,23965.0
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.11262,23711.0
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.23480,23708.998
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.35744,23667.0
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.51751,23522.999
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.68198,23428.999
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.81386,23412.0
+kroA100,1,ACO MMAS + 2-opt (à chaud),0.98074,23372.999
+kroA100,1,ACO MMAS + 2-opt (à chaud),1.19061,23308.0
+kroA100,1,ACO MMAS + 2-opt (à chaud),1.51263,23307.998
+kroA100,1,ACO MMAS + 2-opt (à chaud),20.03778,23307.998
+kroA100,1,2-opt sur l'ancienne tournée,0.00057,23658.0
+kroA100,1,OR-Tools (à chaud),0.10297,23724.0
+kroA100,1,OR-Tools (à chaud),0.30421,23621.0
+kroA100,1,OR-Tools (à chaud),1.00416,23621.0
+kroA100,1,OR-Tools (à chaud),3.00416,23621.0
+kroA100,1,OR-Tools (à chaud),10.00397,23621.0
+kroA100,1,OR-Tools (à chaud),20.00426,23590.0
+kroA100,1,ACO MMAS + 2-opt (à froid),0.04601,23988.002
+kroA100,1,ACO MMAS + 2-opt (à froid),0.12665,23604.001
+kroA100,1,ACO MMAS + 2-opt (à froid),0.55327,23587.002
+kroA100,1,ACO MMAS + 2-opt (à froid),0.67358,23568.0
+kroA100,1,ACO MMAS + 2-opt (à froid),0.75588,23308.002
+kroA100,1,ACO MMAS + 2-opt (à froid),0.94940,23308.0
+kroA100,1,ACO MMAS + 2-opt (à froid),1.22663,23307.998
+kroA100,1,ACO MMAS + 2-opt (à froid),20.02180,23307.998
+kroA100,1,2-opt multi-départs (à froid),0.00103,24427.0
+kroA100,1,2-opt multi-départs (à froid),0.00176,23726.0
+kroA100,1,2-opt multi-départs (à froid),0.00516,23573.0
+kroA100,1,2-opt multi-départs (à froid),0.01387,23521.0
+kroA100,1,2-opt multi-départs (à froid),0.01792,23472.0
+kroA100,1,2-opt multi-départs (à froid),0.10456,23424.0
+kroA100,1,2-opt multi-départs (à froid),0.71751,23404.0
+kroA100,1,2-opt multi-départs (à froid),2.00818,23321.0
+kroA100,1,2-opt multi-départs (à froid),17.44592,23308.0
+kroA100,1,2-opt multi-départs (à froid),20.00065,23308.0
+kroA100,2,ancienne tournée (sans rien faire),0.00000,26199.0
+kroA100,2,ACO MMAS + 2-opt (à chaud),0.04230,23658.0
+kroA100,2,ACO MMAS + 2-opt (à chaud),0.37795,23517.0
+kroA100,2,ACO MMAS + 2-opt (à chaud),0.51937,23416.002
+kroA100,2,ACO MMAS + 2-opt (à chaud),0.64481,23416.0
+kroA100,2,ACO MMAS + 2-opt (à chaud),0.68985,23415.998
+kroA100,2,ACO MMAS + 2-opt (à chaud),4.39928,23351.001
+kroA100,2,ACO MMAS + 2-opt (à chaud),4.64441,23350.999
+kroA100,2,ACO MMAS + 2-opt (à chaud),5.13688,23350.997
+kroA100,2,ACO MMAS + 2-opt (à chaud),8.68570,23307.998
+kroA100,2,ACO MMAS + 2-opt (à chaud),20.02158,23307.998
+kroA100,2,2-opt sur l'ancienne tournée,0.00082,23658.0
+kroA100,2,OR-Tools (à chaud),0.10506,23659.0
+kroA100,2,OR-Tools (à chaud),0.30448,23621.0
+kroA100,2,OR-Tools (à chaud),1.00443,23621.0
+kroA100,2,OR-Tools (à chaud),3.00403,23621.0
+kroA100,2,OR-Tools (à chaud),10.00263,23621.0
+kroA100,2,OR-Tools (à chaud),20.00417,23590.0
+kroA100,2,ACO MMAS + 2-opt (à froid),0.03942,24313.0
+kroA100,2,ACO MMAS + 2-opt (à froid),0.08945,24012.0
+kroA100,2,ACO MMAS + 2-opt (à froid),0.13032,23600.001
+kroA100,2,ACO MMAS + 2-opt (à froid),0.79575,23572.999
+kroA100,2,ACO MMAS + 2-opt (à froid),0.96433,23526.001
+kroA100,2,ACO MMAS + 2-opt (à froid),1.10242,23480.0
+kroA100,2,ACO MMAS + 2-opt (à froid),1.27277,23461.002
+kroA100,2,ACO MMAS + 2-opt (à froid),1.35808,23441.004
+kroA100,2,ACO MMAS + 2-opt (à froid),1.47954,23441.0
+kroA100,2,ACO MMAS + 2-opt (à froid),1.85415,23409.0
+kroA100,2,ACO MMAS + 2-opt (à froid),2.17421,23307.998
+kroA100,2,ACO MMAS + 2-opt (à froid),20.03631,23307.998
+kroA100,2,2-opt multi-départs (à froid),0.00108,23893.0
+kroA100,2,2-opt multi-départs (à froid),0.00242,23574.0
+kroA100,2,2-opt multi-départs (à froid),0.04547,23571.0
+kroA100,2,2-opt multi-départs (à froid),0.09728,23518.0
+kroA100,2,2-opt multi-départs (à froid),0.29024,23392.0
+kroA100,2,2-opt multi-départs (à froid),1.91742,23387.0
+kroA100,2,2-opt multi-départs (à froid),2.43099,23347.0
+kroA100,2,2-opt multi-départs (à froid),8.73720,23321.0
+kroA100,2,2-opt multi-départs (à froid),20.00041,23321.0

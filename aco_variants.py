@@ -44,11 +44,14 @@ def branching_factor(tau, lam=0.05):
 
 def aco(D_np, variant="MMAS", device="cpu", n_ants=None, max_iter=200,
         alpha=None, beta=None, rho=None, q0=0.9, xi=0.1, p_best=0.05,
-        local_search=False, ls_top=8, stagnation_reset=50, seed=0, time_limit=None):
+        local_search=False, ls_top=8, stagnation_reset=50, seed=0, time_limit=None,
+        init_tau=None):
     '''
     D_np : matrice des distances (numpy n x n).
+    init_tau : pheromones de depart (reprise apres un changement des distances), sinon tau0.
     Renvoie (best_tour, best_cost, history) ; history a une valeur par iteration :
       best, iter_best, mean, branching, time (secondes depuis le debut)
+      et history["tau"] = pheromones finales.
     '''
     p = DEFAULTS[variant]
     alpha = p["alpha"] if alpha is None else alpha
@@ -76,7 +79,7 @@ def aco(D_np, variant="MMAS", device="cpu", n_ants=None, max_iter=200,
         tau0 = 1.0 / (rho * L_nn)
     else:
         tau0 = 1.0 / (n * L_nn)
-    tau = torch.full((n, n), tau0, device=dev)
+    tau = torch.full((n, n), tau0, device=dev) if init_tau is None else init_tau.clone().to(dev)
 
     rows = torch.arange(m, device=dev)
     best_tour, best_len = None, float("inf")
@@ -169,5 +172,6 @@ def aco(D_np, variant="MMAS", device="cpu", n_ants=None, max_iter=200,
         if time_limit and history["time"][-1] > time_limit:
             break
 
+    history["tau"] = tau
     tour = best_tour.cpu().tolist()
     return tour, tour_length(D_np, tour), history

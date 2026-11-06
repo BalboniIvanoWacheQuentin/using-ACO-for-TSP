@@ -3,7 +3,8 @@ Algorithmes "classiques" du TSP, pour comparer avec l'ACO.
 Tous prennent une matrice de distances D (numpy, n x n) et renvoient (tour, cout).
 
   nearest_neighbor     glouton du plus proche voisin            O(n^2)
-  two_opt              recherche locale 2-opt (meilleure amelioration)   O(n^2) par passe
+  two_opt              recherche locale 2-opt, listes des k plus proches voisins et
+                       don't-look bits (comme ACOTSP)           O(k) par mouvement teste
   christofides         approximation garantie <= 1.5 x optimum   O(n^3)
   simulated_annealing  recuit simule avec mouvements 2-opt
   held_karp            programmation dynamique EXACTE            O(n^2 2^n)  (n <= ~15)
@@ -15,6 +16,7 @@ import time
 import numpy as np
 import networkx as nx
 import torch
+from numba import njit
 
 
 # ------------------------------------------------------------
@@ -65,38 +67,87 @@ def nearest_neighbor(D, start=0):
 
 
 # ------------------------------------------------------------
-#  2-opt (version "lot" : ameliore plusieurs tournees en parallele, CPU ou GPU)
+#  2-opt avec listes de voisins et "don't-look bits" (comme ACOTSP, l'implementation de
+#  reference de Dorigo & Stutzle), compile en code machine avec numba
 # ------------------------------------------------------------
-def two_opt_batch(D, tours, max_passes=None, tol=1e-9):
+@njit(cache=True)
+def _two_opt_nb(D, tour, knn, tol):
     '''
-    2-opt meilleure amelioration applique en parallele a un lot de tournees.
-    D : tenseur torch (n, n) ; tours : tenseur long (m, n). Renvoie les tournees ameliorees.
-    A chaque passe, chaque tournee applique son meilleur echange 2-opt (inversion d'un segment).
+    Premiere amelioration : pour chaque ville a, on essaie de creer une arete (a, c) vers l'un
+    de ses k plus proches voisins c. Les listes sont triees : des que d(a, c) >= d(a, b), aucun
+    gain n'est possible et on s'arrete. Une ville dont aucun voisin n'ameliore la tournee est
+    "eteinte" (don't-look bit) jusqu'a ce qu'une de ses aretes change.
+    '''
+    n = tour.shape[0]
+    pos = np.empty(n, np.int64)
+    for i in range(n):
+        pos[tour[i]] = i
+    dlb = np.zeros(n, np.bool_)
+    improved = True
+    while improved:
+        improved = False
+        for a in range(n):
+            if dlb[a]:
+                continue
+            found = False
+            for succ in (True, False):
+                i = pos[a]
+                b = tour[(i + 1) % n] if succ else tour[(i - 1) % n]
+                d_ab = D[a, b]
+                for kk in range(knn.shape[1]):
+                    c = knn[a, kk]
+                    if D[a, c] >= d_ab:
+                        break
+                    j = pos[c]
+                    d = tour[(j + 1) % n] if succ else tour[(j - 1) % n]
+                    if c == b or d == a:
+                        continue
+                    delta = D[a, c] + D[b, d] - d_ab - D[c, d]
+                    if delta < -tol:
+                        # aretes aux positions lo et hi : on inverse le segment lo+1 .. hi
+                        lo, hi = (i, j) if succ else ((i - 1) % n, (j - 1) % n)
+                        if lo > hi:
+                            lo, hi = hi, lo
+                        x, y = lo + 1, hi
+                        while x < y:
+                            tour[x], tour[y] = tour[y], tour[x]
+                            pos[tour[x]] = x
+                            pos[tour[y]] = y
+                            x += 1
+                            y -= 1
+                        dlb[a] = dlb[b] = dlb[c] = dlb[d] = False
+                        found = improved = True
+                        break
+                if found:
+                    break
+            if not found:
+                dlb[a] = True
+    return tour
+
+
+_KNN_CACHE = [None, None, None]              # (D, D en numpy, listes de voisins) du dernier appel
+
+
+def two_opt_batch(D, tours, max_passes=None, tol=1e-9, k=20):
+    '''
+    2-opt applique a un lot de tournees (tenseurs torch : D (n, n), tours (m, n)).
+    k : taille des listes de voisins (20 comme dans ACOTSP). Chaque mouvement coute O(k) a trouver
+    et O(n) a appliquer (inversion d'un segment).
+    max_passes : conserve pour compatibilite, non utilise.
     '''
     m, n = tours.shape
     if n < 5:
         return tours
-    dev = tours.device
-    idx = torch.arange(n, device=dev)
-    valid = idx[None, :] > idx[:, None] + 1          # paires (i, j) avec j >= i + 2
-    valid[0, n - 1] = False                           # aretes adjacentes (bouclage)
-    for _ in range(max_passes or 10 * n):
-        A, B = tours, tours.roll(-1, dims=1)          # arete i = (A[i], B[i])
-        d_ab = D[A, B]
-        # gain de remplacer (a,b),(c,d) par (a,c),(b,d)
-        delta = (D[A[:, :, None], A[:, None, :]] + D[B[:, :, None], B[:, None, :]]
-                 - d_ab[:, :, None] - d_ab[:, None, :])
-        delta = delta.masked_fill(~valid, 0.0)
-        best = delta.reshape(m, -1).min(dim=1)
-        improve = best.values < -tol
-        if not bool(improve.any()):
-            break
-        i = (best.indices // n)[:, None]
-        j = (best.indices % n)[:, None]
-        pos = idx[None, :]
-        rev = (pos > i) & (pos <= j) & improve[:, None]
-        tours = torch.gather(tours, 1, torch.where(rev, i + j + 1 - pos, pos))
-    return tours
+    if _KNN_CACHE[0] is not D:
+        Dn = D.detach().cpu().numpy().astype(np.float64)
+        k_eff = min(k, n - 1)
+        knn = np.argsort(Dn + np.diag(np.full(n, np.inf)), axis=1)[:, :k_eff].astype(np.int64)
+        _KNN_CACHE[:] = [D, Dn, knn]
+    _, Dn, knn = _KNN_CACHE
+    out = tours.detach().cpu().numpy().astype(np.int64)
+    for r in range(m):
+        out[r] = _two_opt_nb(Dn, out[r].copy(), knn, tol)
+    return torch.from_numpy(out).to(tours.device)
 
 
 def two_opt(D, tour):
@@ -206,7 +257,8 @@ def held_karp(D):
 # ------------------------------------------------------------
 #  Google OR-Tools (optionnel) : heuristique industrielle, recherche locale guidee
 # ------------------------------------------------------------
-def ortools_solve(D, time_limit_s=10):
+def ortools_solve(D, time_limit_s=10, init_tour=None):
+    '''init_tour : tournee de depart (reprise "a chaud"), sinon OR-Tools construit la sienne'''
     from ortools.constraint_solver import pywrapcp, routing_enums_pb2
     n = len(D)
     scale = 1000.0 / max(float(D.max()), 1e-9)       # OR-Tools travaille en entiers
@@ -220,7 +272,16 @@ def ortools_solve(D, time_limit_s=10):
     params.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
     params.local_search_metaheuristic = routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
     params.time_limit.FromMilliseconds(int(time_limit_s * 1000))
-    sol = routing.SolveWithParameters(params)
+    if init_tour is None:
+        sol = routing.SolveWithParameters(params)
+    else:
+        routing.CloseModelWithParameters(params)
+        k = list(init_tour).index(0)                  # la tournee doit partir du depot 0
+        route = [int(v) for v in list(init_tour[k + 1:]) + list(init_tour[:k])]
+        start = routing.ReadAssignmentFromRoutes([route], True)
+        sol = routing.SolveFromAssignmentWithParameters(start, params)
+    if sol is None:                                   # aucune solution dans le temps imparti
+        return None, float("inf")
     idx, tour = routing.Start(0), []
     while not routing.IsEnd(idx):
         tour.append(manager.IndexToNode(idx))

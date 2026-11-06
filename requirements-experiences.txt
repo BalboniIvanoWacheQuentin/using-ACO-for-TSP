@@ -2,5 +2,7 @@
 #   pip install -r requirements.txt -r requirements-experiences.txt
 pandas>=2.0
 ortools>=9.10
-# PyTorch : la version CPU suffit (toutes les mesures ont été faites sur un seul cœur CPU)
+# PyTorch : la version CPU suffit
 torch>=2.4
+# numba : compile le 2-opt (listes de voisins) en code machine
+numba>=0.60

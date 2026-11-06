@@ -26,12 +26,13 @@ pip install -r requirements.txt -r requirements-experiences.txt
 | Commande | Résultat | Durée |
 |---|---|---|
 | `python experiments.py` | Étude des paramètres (30 villes, 10 graines) : `runs.csv`, `history.csv` | quelques minutes |
-| `python accuracy_time.py` | Complexité (`results/complexity.csv`) et précision vs temps sur eil51, kroA100, ch150 (`results/anytime.csv`) | ≈ 35 min |
+| `python accuracy_time.py complexity` | Complexité, n = 25 à 1 600 (`results/complexity.csv`) | ≈ 5 min |
+| `python accuracy_time.py anytime rat783` | Précision vs temps (budget 60 s) sur une instance (`results/anytime_rat783.csv`) ; sans nom, les 5 instances à la suite | ≈ 20 min par instance |
+| `python dynamic.py rat783` | TSP dynamique (20 % des routes ralenties en cours de calcul) : reprise à chaud ou à froid (`results/dynamic_rat783.csv`) ; sans nom, kroA100 et rat783 | ≈ 7 min par instance |
 | `python plot_accuracy_time.py` | Figures `results/figures/` et tableau par budget `results/budget_table.csv` | quelques secondes |
 | `python slides/make_figures.py` | Figures des paramètres dans `slides/figures/` | ≈ 1 min |
 | `tectonic slides/presentation.tex` | Diapos (Beamer, thème Metropolis) | ≈ 1 min |
 
-Tous les temps sont mesurés sur **un seul cœur CPU** pour que les algorithmes soient comparables.
 
 ## Fichiers
 
@@ -39,16 +40,16 @@ Tous les temps sont mesurés sur **un seul cœur CPU** pour que les algorithmes 
 |---|---|
 | `algorithms.py` | Ant System et recherche aléatoire de l'application, avec l'historique par itération |
 | `aco_variants.py` | AS, ACS, MMAS et MMAS + 2-opt (toutes les fourmis en parallèle, PyTorch) |
-| `tsp_classics.py` | Plus proche voisin, 2-opt, Christofides, recuit simulé, Held-Karp, OR-Tools |
-| `style.py` | Couleurs et style communs des figures |
-| `data/tsplib/` | Instances TSPLIB à optimum prouvé (eil51 : 426, berlin52 : 7542, st70 : 675, kroA100 : 21282, ch150 : 6528) |
+| `tsp_classics.py` | Plus proche voisin, 2-opt (listes de 20 voisins, compilé avec numba), Christofides, recuit simulé, Held-Karp, OR-Tools |
+| `style.py` | Couleurs et style communs des figures (tailles pensées pour des diapos) |
+| `data/tsplib/` | Instances TSPLIB à optimum prouvé (eil51 : 426, berlin52 : 7542, st70 : 675, kroA100 : 21282, ch150 : 6528, pcb442 : 50778, rat783 : 8806) |
 | `results/` | Résultats bruts et figures de la comparaison précision vs temps |
 | `slides/` | Source des diapos et figures |
 
 ## Principaux résultats
 
-- La complexité mesurée suit la théorie pour Christofides (pente 2,9 pour 3), le 2-opt et Held-Karp (×2,1 par ville ajoutée).
-- Sous la seconde, plus proche voisin + 2-opt est imbattable (1,4 à 3 % de l'optimum en quelques ms).
-- Avec quelques secondes, MMAS + 2-opt atteint 0 à 0,4 % de l'optimum, au niveau d'OR-Tools.
-- À recherche locale égale, partir des tournées des fourmis plutôt que de tournées aléatoires divise l'écart par 7 à 10.
+- La complexité mesurée suit la théorie : pentes 1,8 à 2,8 pour 2 à 3, Held-Karp ×2,1 par ville ; seul le plus proche voisin s'en écarte (coûts fixes).
+- Un 2-opt rapide relancé depuis des tournées aléatoires gagne presque partout, de 51 à 783 villes.
+- MMAS + 2-opt atteint l'optimum jusqu'à 150 villes et gagne sur ch150 à 10 s (0,02 % contre 0,45 %), mais il lui faut des centaines d'itérations : en 60 s, il n'en fait que 123 sur pcb442 et 45 sur rat783, où il reste à 3 à 5 %.
 - L'ACO sans recherche locale est toujours battu par une méthode qui utilise le 2-opt.
+- TSP dynamique : garder ses phéromones aide un peu (rat783 à 20 s : 1,84 % contre 2,34 %), mais un 2-opt multi-départs relancé de zéro fait mieux (1,17 %).

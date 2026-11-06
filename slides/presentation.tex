@@ -26,26 +26,18 @@
 
 \maketitle
 
-% ------------------------------------------------------------
-\begin{frame}{Plan}
-  \begin{columns}[T]
-    \column{0.5\textwidth}
-    \begin{enumerate}
-      \item Le problème et les méthodes classiques
-      \item Le modèle ACO
-      \item Ce que prédit la théorie
-      \item Protocole expérimental
-    \end{enumerate}
-    \column{0.5\textwidth}
-    \begin{enumerate}\setcounter{enumi}{4}
-      \item Complexité : mesure vs théorie
-      \item Précision vs temps de calcul
-      \item Cas d'usage et limites
-    \end{enumerate}
-  \end{columns}
-  \vspace{1em}
-  \alert{Question centrale :} pour un temps de calcul donné, quel algorithme donne la
-  meilleure tournée, et l'ACO a-t-il sa place ?
+\begin{frame}{Question et plan}
+  \alert{Question centrale :} pour un temps de calcul donné, quel algorithme donne la meilleure
+  tournée, et l'ACO a-t-il sa place ?
+
+  \bigskip
+  \begin{enumerate}
+    \item Le problème et les algorithmes comparés
+    \item Le modèle ACO (avec démonstration)
+    \item Théorie et complexité : la mesure confirme-t-elle la théorie ?
+    \item Précision contre temps de calcul, de 51 à 783 villes
+    \item Cas d'usage
+  \end{enumerate}
 \end{frame}
 
 % ============================================================
@@ -89,7 +81,7 @@
     \midrule
     Held-Karp & exact (prog. dynamique) & $O(n^2 2^n)$ & optimum \\
     Plus proche voisin (PPV) & glouton & $O(n^2)$ & aucune \\
-    PPV + 2-opt & recherche locale & $O(n^2)$ par passe & optimum local \\
+    PPV + 2-opt & recherche locale & $O(k)$ par mouvement$^{*}$ & optimum local \\
     Christofides & approximation & $O(n^3)$ & $\le 1{,}5 \times$ optimum \\
     Recuit simulé & métaheuristique & $O(\text{itérations})$ & asymptotique \\
     OR-Tools (Google) & solveur industriel & limite de temps & aucune \\
@@ -101,8 +93,10 @@
 
   \vspace{0.6em}
   \raggedright
-  $T$ : itérations, $m$ : fourmis. Témoin ajouté : \alert{2-opt multi-départs}
-  (2-opt relancé depuis des tournées aléatoires), pour isoler l'apport de l'apprentissage.
+  $T$ : itérations, $m$ : fourmis. $^{*}$ listes des $k = 20$ plus proches voisins, comme dans
+  ACOTSP (code de référence de Dorigo \& Stützle).
+  Témoin ajouté : \alert{2-opt multi-départs} (2-opt relancé depuis des tournées aléatoires),
+  pour isoler l'apport de l'apprentissage.
 \end{frame}
 
 % ============================================================
@@ -172,11 +166,22 @@
       \item Réglages de référence : $\alpha = 1$, $\beta = 2$, $\rho = 0{,}2$
       \item $\alpha = 3$ : la colonie se fige sur une piste trop tôt
       \item $\beta = 0$ : sans la distance, presque du hasard
+      \item Carte des phéromones : curseur d'itération
     \end{enumerate}
     \medskip
     \tiny
     \href{https://using-aco-for-tsp-faqcu8kd7htkggervtpugk.streamlit.app}{\texttt{using-aco-for-tsp-faqcu8kd7htkggervtpugk}\\\texttt{.streamlit.app}}
   \end{columns}
+\end{frame}
+
+\begin{frame}{Les pistes de phéromone au fil des itérations}
+  \centering
+  \includegraphics[height=0.68\textheight]{pheromones.png}\par
+  \raggedright\footnotesize
+  Épaisseur d'une arête = sa phéromone (normalisée à chaque itération), 20 villes.
+  $\alpha = 1$ : plusieurs pistes coexistent et la tournée se dessine peu à peu (\alert{exploration}).
+  $\alpha = 3$ : une piste s'impose dès l'itération 10 et se fige sur une tournée qui se croise
+  (\alert{convergence prématurée}).
 \end{frame}
 
 \begin{frame}{Variantes testées}
@@ -197,7 +202,7 @@
 \end{frame}
 
 % ============================================================
-\section{Ce que prédit la théorie}
+\section{Théorie et complexité}
 % ============================================================
 
 \begin{frame}{Complexité d'une itération d'ACO}
@@ -214,7 +219,8 @@
     \begin{block}{Prédictions testables}
       \begin{itemize}
         \item $m$ et $T$ fixés : temps $\propto n^2$ \\ (pente 2 en log-log)
-        \item Ajouter 2-opt : chaque passe coûte $O(n^2)$, et le nombre de passes croît avec $n$
+        \item 2-opt (listes de voisins) : $O(n)$ mouvements à $O(k)$ chacun $\Rightarrow$ la
+              construction $O(m\,n^2)$ reste dominante
         \item Held-Karp : temps $\times \approx 2$ par ville ajoutée
       \end{itemize}
     \end{block}
@@ -242,172 +248,139 @@
   \end{alertblock}
 \end{frame}
 
-% ============================================================
-\section{Protocole expérimental}
-% ============================================================
-
 \begin{frame}{Protocole}
   \footnotesize
   \begin{columns}[T]
     \column{0.5\textwidth}
     \textbf{Expérience 1 : complexité}
     \begin{itemize}
-      \item Instances aléatoires, $n = 25$ à $800$
+      \item Instances aléatoires, $n = 25$ à $1\,600$
       \item Held-Karp : $n = 6$ à $16$
       \item ACO : 25 fourmis, 10 itérations
       \item Pente mesurée en log-log sur les grands $n$
     \end{itemize}
     \textbf{Expérience 2 : précision vs temps}
     \begin{itemize}
-      \item TSPLIB à \alert{optimum prouvé} : eil51, kroA100, ch150
-      \item Budget de 30 s, 3 graines par algorithme aléatoire
+      \item TSPLIB à \alert{optimum prouvé}, de 51 à 783 villes : eil51, kroA100, ch150,
+            pcb442, rat783
+      \item Budget de 60 s, 3 graines par algorithme aléatoire
       \item On enregistre la meilleure tournée au cours du temps
     \end{itemize}
     \column{0.5\textwidth}
     \textbf{Trois types d'algorithmes}
     \begin{itemize}
       \item \emph{Un coup} (un point) : PPV, PPV + 2-opt, Christofides
-      \item \emph{Budget réglable} : recuit simulé (30 à 30\,000 $n$ itérations),
-            OR-Tools (0,1 à 30 s)
+      \item \emph{Budget réglable} : recuit simulé (30 à 100\,000 $n$ itérations),
+            OR-Tools (0,1 à 60 s)
       \item \emph{Anytime} (une courbe) : ACO, 2-opt multi-départs
     \end{itemize}
     \textbf{Équité}
     \begin{itemize}
-      \item Tous les algorithmes sur \alert{un seul cœur} de la même machine
+      \item Tous les algorithmes sur la même machine, dans les mêmes conditions
       \item Même budget de temps pour tous
       \item Paramètres standards de la littérature, sans réglage par instance
     \end{itemize}
   \end{columns}
 \end{frame}
 
-% ============================================================
-\section{Complexité : mesure vs théorie}
-% ============================================================
-
 \begin{frame}{Temps de calcul en fonction de $n$}
   \centering
-  \includegraphics[width=\textwidth]{complexity_all.png}
-\end{frame}
-
-\begin{frame}{Pentes mesurées vs théorie}
-  \centering
-  \small
-  \begin{tabular}{lccl}
-    \toprule
-    Algorithme & Théorie & Mesuré & Lecture \\
-    \midrule
-    Christofides & 3 & \bon{2,9} & conforme \\
-    PPV + 2-opt & $\approx 3$ & \bon{2,9} & $O(n^2)$ par passe $\times$ $O(n)$ passes \\
-    ACO AS ($m$, $T$ fixés) & 2 & 1,7 & proche, coûts fixes par pas \\
-    ACO MMAS + 2-opt & $> 2$ & 3,1 & dominé par le 2-opt \\
-    Plus proche voisin & 2 & 1,3 & boucle interne vectorisée \\
-    Recuit simulé & 1 à 2 & 1,1 & coût par itération quasi constant \\
-    Held-Karp & $\times 2{,}3$ / ville & \bon{$\times$ 2,1} & exponentiel, conforme \\
-    \bottomrule
-  \end{tabular}
-
-  \vspace{0.3em}
-  \raggedright
-  \begin{itemize}\footnotesize
-    \item Les écarts viennent des \alert{coûts fixes} de l'implémentation : une opération sur $n$
-          valeurs coûte presque autant pour $n = 25$ que pour $n = 800$. La théorie décrit le
-          comportement pour $n$ grand.
-    \item Held-Karp : 0,7 s à $n = 16$ ; extrapolé à $n = 30$ : $\approx 6$ h et
-          \alert{plus de 100 Go} de mémoire.
-  \end{itemize}
+  \includegraphics[width=0.82\textwidth]{complexity_all.png}\par
+  \raggedright\footnotesize
+  Pentes (entre parenthèses) proches de la théorie : 2 pour l'ACO et PPV + 2-opt, 3 pour
+  Christofides. Held-Karp : $\times 2{,}1$ par ville, 1,1 s à $n = 16$, \alert{$\approx 11$ h}
+  et plus de 100 Go à $n = 30$.
 \end{frame}
 
 % ============================================================
 \section{Précision vs temps de calcul}
 % ============================================================
 
-\begin{frame}{kroA100 : précision en fonction du temps accordé}
+\begin{frame}{ch150 (150 villes) : précision en fonction du temps accordé}
   \centering
-  \includegraphics[height=0.84\textheight]{anytime_kroA100.png}
+  \includegraphics[height=0.86\textheight]{anytime_ch150.png}
 \end{frame}
 
-\begin{frame}{ch150 : précision en fonction du temps accordé}
+\begin{frame}{rat783 (783 villes) : précision en fonction du temps accordé}
   \centering
-  \includegraphics[height=0.84\textheight]{anytime_ch150.png}
+  \includegraphics[height=0.86\textheight]{anytime_rat783.png}
 \end{frame}
-
-
 
 \begin{frame}{Quel algorithme gagne, selon le temps disponible ?}
   \centering
   \footnotesize
-  \begin{tabular}{llll}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{llllll}
     \toprule
-    Budget & eil51 ($n = 51$) & kroA100 ($n = 100$) & ch150 ($n = 150$) \\
+    Budget & eil51 & kroA100 & ch150 & pcb442 & rat783 \\
     \midrule
-    10 ms  & PPV+2-opt (2,1 \%) & PPV+2-opt (3,0 \%) & PPV+2-opt$^{*}$ (1,4 \%) \\
-    0,1 s  & PPV+2-opt (2,1 \%) & PPV+2-opt (3,0 \%) & PPV+2-opt (1,4 \%) \\
-    1 s    & \alert{MMAS+2-opt} (0,1 \%) & \alert{MMAS+2-opt} (0,2 \%) & PPV+2-opt (1,4 \%) \\
-    10 s   & \alert{MMAS+2-opt} (0,1 \%) & \alert{MMAS+2-opt}$^{\dagger}$ (0 \%) & \alert{MMAS+2-opt} (0,4 \%) \\
-    30 s   & \alert{MMAS+2-opt}$^{\ddagger}$ (0,1 \%) & \alert{MMAS+2-opt}$^{\dagger}$ (0 \%) & \alert{MMAS+2-opt} (0,3 \%) \\
+    10 ms  & m.-d. (0,6) & m.-d. (0,7) & m.-d. (2,8) & PPV (22) & PPV (26) \\
+    0,1 s  & m.-d. (0,2) & m.-d. (0,2) & m.-d. (1,6) & m.-d. (4,2) & m.-d. (6,2) \\
+    1 s    & m.-d. (0) & m.-d. (0) & m.-d. (0,7) & m.-d. (3,3) & m.-d. (5,4) \\
+    10 s   & m.-d. (0) & \alert{MMAS}$^{=}$ (0) & \alert{MMAS} (0,02) & m.-d. (2,9) & m.-d. (5,0) \\
+    60 s   & \alert{MMAS}$^{=}$ (0) & \alert{MMAS}$^{=}$ (0) & \alert{MMAS} (0) & m.-d. (2,7) & OR-Tools (4,1) \\
     \bottomrule
   \end{tabular}
 
-  \raggedright\scriptsize $^{*}$ en 13 ms ; $^{\dagger}$ ex æquo avec OR-Tools ;
-  $^{\ddagger}$ ex æquo avec 2-opt multi-départs. \normalsize
-  \vspace{0.5em}
-  \raggedright
-  \begin{itemize}
-    \item Temps très court : \alert{PPV + 2-opt} est imbattable
-    \item Dès que le budget permet plusieurs centaines d'itérations, \alert{MMAS + 2-opt} prend la
-          tête ; le seuil augmente avec $n$ ($< 1$ s pour 100 villes, $\approx 4$ s pour 150)
+  \raggedright\scriptsize Écart à l'optimum en \%, moyenne de 3 graines. m.-d. : 2-opt multi-départs ;
+  MMAS : MMAS + 2-opt ; $^{=}$ ex æquo avec m.-d. (et OR-Tools sur kroA100 à 60 s). \normalsize
+  \vspace{0.4em}
+  \begin{itemize}\small
+    \item Un \alert{2-opt rapide relancé depuis des tournées aléatoires} gagne presque partout
+    \item \alert{MMAS + 2-opt} ne gagne que lorsqu'il a le temps de faire des centaines
+          d'itérations : 730 en 60 s sur ch150, mais 45 seulement sur rat783
     \item Les ACO \alert{sans} recherche locale ne gagnent jamais
   \end{itemize}
 \end{frame}
 
 \begin{frame}{L'apprentissage des fourmis sert-il vraiment ?}
   \begin{columns}[c]
-    \column{0.5\textwidth}
-    \textbf{Contre le hasard} (30 villes, 2\,000 tournées)
+    \column{0.42\textwidth}
+    \textbf{Contre le hasard} (30 villes)
     \includegraphics[width=\textwidth]{aco_vs_random.png}
-    \small ACO : \bon{457} ; recherche aléatoire : 1218
-    \column{0.47\textwidth}
+    \small ACO : \bon{457} ; hasard : 1218
+    \column{0.56\textwidth}
     \textbf{Contre le témoin 2-opt multi-départs}
     \footnotesize
     \begin{center}
-    \setlength{\tabcolsep}{4pt}
-    \begin{tabular}{lrr}
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{lrrrr}
       \toprule
-      à 10 s (\%) & 2-opt m.-d. & MMAS+2-opt \\
+      écart (\%) & \multicolumn{2}{c}{à 10 s} & \multicolumn{2}{c}{à 60 s} \\
+      & m.-d. & MMAS & m.-d. & MMAS \\
       \midrule
-      eil51   & 0,55 & \bon{0,08} \\
-      kroA100 & 0,35 & \bon{0,00} \\
-      ch150   & 3,66 & \bon{0,37} \\
+      eil51   & \bon{0}    & 0,08       & 0          & 0 \\
+      kroA100 & 0          & 0          & 0          & 0 \\
+      ch150   & 0,45       & \bon{0,02} & 0,27       & \bon{0} \\
+      pcb442  & \bon{2,88} & 4,25       & \bon{2,66} & 3,24 \\
+      rat783  & \bon{4,99} & 6,34       & \bon{4,66} & 5,25 \\
       \bottomrule
     \end{tabular}
     \end{center}
-    Même recherche locale, même temps : partir des tournées proposées par les fourmis
-    plutôt que de tournées aléatoires divise l'écart par \alert{7 à 10}, et atteint l'optimum
-    sur kroA100.
+    \vspace{-0.6em}
+    {\scriptsize m.-d. : 2-opt multi-départs ; MMAS : MMAS + 2-opt.\par}
+    \smallskip
+    Même 2-opt, même temps. Les phéromones aident sur \alert{ch150} ; jusqu'à 100 villes le 2-opt
+    seul suffit ; dès 442 villes, l'ACO fait trop peu d'itérations en 60 s.
   \end{columns}
 \end{frame}
 
-\begin{frame}{Paramètres : le compromis précision/temps dans l'ACO lui-même}
+\begin{frame}{Influence des paramètres (30 villes, 10 graines)}
   \centering
-  \includegraphics[height=0.40\textheight]{params_effect.png}
-  \vspace{-0.4em}
-  \begin{columns}[c]
-    \column{0.42\textwidth}
-    \includegraphics[width=\textwidth,height=0.36\textheight,keepaspectratio]{premature.png}
-    \column{0.56\textwidth}
-    \footnotesize
-    \begin{itemize}
-      \item $\alpha = 3$ : converge en $\approx 10$ it. mais s'arrête à $494$ ;
-            $\alpha = 1$ : $\approx 40$ it., atteint $457$
-      \item $\beta = 0$ : presque le hasard ; $\alpha = 0$ (pas de mémoire) : $597$
-      \item $\rho$ : peu d'effet ; plus de fourmis : plus régulier (é.-t. 14,6 $\to$ 1,1)
-    \end{itemize}
-    \scriptsize 30 villes, 10 graines. Détail : page \og Analyse\fg{} de la démo.
-  \end{columns}
+  \includegraphics[width=0.95\textwidth]{params_effect.png}
+  \raggedright
+  \vspace{-0.8em}
+  \begin{itemize}\small
+    \item $\beta = 0$ (distance ignorée) : presque aussi mauvais que le hasard
+    \item $\alpha = 0$ (pas de mémoire) : $597$ ; $\alpha$ trop grand : convergence prématurée
+    \item $\rho$ : peu d'effet ici ; plus de fourmis : résultats plus réguliers (é.-t. 14,6 $\to$ 1,1)
+  \end{itemize}
+  \scriptsize Cercle orange : réglage de référence. Convergence prématurée ($\alpha = 3$) : voir la démo et
+  l'annexe ; détail interactif : page \og Analyse\fg{} de l'application.
 \end{frame}
 
 % ============================================================
-\section{Cas d'usage et limites}
+\section{Cas d'usage}
 % ============================================================
 
 \begin{frame}{Quel algorithme pour quelle situation ? (TSP statique)}
@@ -418,26 +391,43 @@
     Situation & Choix & Justification mesurée \\
     \midrule
     $n \le 15$, optimum exigé & Held-Karp & exact en $< 1$ s ; $\times 2$ par ville ensuite \\
-    Réponse en quelques ms & PPV + 2-opt & 1,4 à 3 \% en 3 à 13 ms \\
-    Garantie théorique exigée & Christofides & $\le 1{,}5\times$ prouvé ; mesuré 8 à 10 \% \\
-    Quelques secondes, meilleure qualité & \textcolor{acoorange}{MMAS + 2-opt} & 0 à 0,4 \% en 10 s ; optimum sur kroA100 \\
-    Solveur prêt à l'emploi & OR-Tools & 0 à 0,8 \% en 30 s, sans réglage \\
-    ACO sans recherche locale & à éviter & 0,4 à 7 \% en 30 s ; toujours battu par une méthode avec 2-opt \\
+    Réponse en quelques ms & PPV + 2-opt & 3 à 7 \% en 1 à 45 ms \\
+    Moins d'une seconde & 2-opt multi-départs & 0 à 5 \% en 1 s, de 51 à 783 villes \\
+    Quelques secondes, $n \approx 150$ & \textcolor{acoorange}{MMAS + 2-opt} & 0,02 \% en 10 s sur ch150 (2-opt m.-d. : 0,45) \\
+    Grande instance, budget long & OR-Tools & meilleur sur rat783 en 60 s (4,1 \%) \\
+    Garantie théorique exigée & Christofides & $\le 1{,}5\times$ prouvé ; mesuré 8 à 14 \% \\
+    ACO sans recherche locale & à éviter & toujours battu par une méthode avec 2-opt \\
     \bottomrule
   \end{tabular}
 
   \vspace{0.6em}
   \raggedright\small
-  L'ACO joue le rôle de \alert{générateur de bons points de départ} pour la recherche locale.
+  L'ACO joue le rôle de \alert{générateur de bons points de départ} pour la recherche locale ;
+  il ne paie que si le budget permet \alert{des centaines d'itérations}.
+\end{frame}
+
+\begin{frame}{TSP dynamique : garder ses phéromones aide-t-il ?}
+  \centering
+  \includegraphics[width=0.88\textwidth]{dynamic.png}
+  \raggedright\footnotesize
+  \vspace{-0.5em}
+  \begin{itemize}\setlength{\itemsep}{0pt}
+    \item Après 20 s de calcul, \alert{20 \% des routes sont ralenties} ($\times 1$ à $\times 3$) ;
+          chaque méthode a 20 s pour réagir (médiane de 3 graines)
+    \item Garder ses phéromones aide un peu (rat783 : 1,84 \% contre 2,34 \%), mais un
+          \alert{2-opt multi-départs relancé de zéro} fait mieux (\bon{1,17 \%})
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Où l'ACO a un avantage structurel}
   \begin{columns}[T]
     \column{0.5\textwidth}
+    \small
     \textbf{Problèmes qui changent dans le temps}
     \begin{itemize}
       \item Routage réseau (AntNet, Di Caro \& Dorigo, 1998) : les phéromones s'adaptent quand les
-            coûts changent, sans tout recalculer
+            coûts changent
+      \item Notre mesure sur le TSP : gain faible
     \end{itemize}
     \textbf{Problèmes avec contraintes métier}
     \begin{itemize}
@@ -452,38 +442,25 @@
       NP-difficile ou change dans le temps.
     \end{alertblock}
     \begin{block}{Coût à prévoir}
-      Réglage des paramètres ($\alpha$, $\beta$, $\rho$) et quelques secondes de calcul
-      avant de battre les heuristiques simples.
+      Réglage des paramètres ($\alpha$, $\beta$, $\rho$) et des centaines d'itérations
+      avant de battre un 2-opt multi-départs.
     \end{block}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Limites de notre étude}
-  \begin{itemize}
-    \item Trois instances TSPLIB, $n \le 150$ : le seuil où MMAS + 2-opt devient le meilleur
-          choix augmente avec $n$ et reste à mesurer au-delà
-    \item Budget maximal de 30 s, sur une seule machine
-    \item Paramètres standards de la littérature, non réglés par instance (ni pour l'ACO, ni pour
-          le recuit simulé, ni pour OR-Tools)
-    \item Implémentation Python : les temps absolus seraient plus faibles en C, mais les pentes
-          et le classement devraient rester proches
-    \item Les avantages \og dynamique\fg{} et \og contraintes\fg{} de l'ACO viennent de la
-          littérature, pas de nos mesures
-  \end{itemize}
-\end{frame}
-
 \begin{frame}{Conclusion}
   \begin{enumerate}
-    \item \textbf{La complexité mesurée suit la théorie} pour Christofides, 2-opt et Held-Karp ;
-          ailleurs, les coûts fixes de l'implémentation dominent aux tailles testées
-    \item \textbf{Précision vs temps :} PPV + 2-opt domine sous la seconde ; avec quelques
-          secondes, \alert{MMAS + 2-opt} atteint l'optimum ou s'en approche à 0,3 \%, au niveau
-          d'OR-Tools
-    \item \textbf{L'apprentissage compte :} à recherche locale égale, partir des tournées des
-          fourmis divise l'écart par 7 à 10 (et atteint l'optimum sur kroA100)
+    \item \textbf{La complexité mesurée suit la théorie} (pentes 1,8 à 2,8 pour 2 à 3,
+          Held-Karp $\times 2{,}1$ par ville), sauf pour le plus proche voisin, dominé par des coûts
+          fixes
+    \item \textbf{Précision vs temps :} un 2-opt rapide relancé depuis des tournées aléatoires
+          gagne presque partout ; \alert{MMAS + 2-opt} atteint l'optimum jusqu'à 150 villes et
+          gagne sur ch150 à 10 s
+    \item \textbf{L'apprentissage compte, sous condition :} il faut des centaines d'itérations ;
+          à 442 et 783 villes, 60 s ne suffisent pas (123 et 45 itérations)
     \item \textbf{Cas d'usage :} l'ACO seul ne vaut pas les heuristiques classiques sur le TSP
           statique ; son intérêt est d'être hybridé avec une recherche locale, ou utilisé sur des
-          problèmes dynamiques et contraints
+          problèmes contraints ; sur un TSP dynamique, garder ses phéromones aide peu
   \end{enumerate}
   \vspace{0.2em}
   \centering
@@ -518,37 +495,109 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Annexe : écart à l'optimum (\%) pour un budget de 1 s et de 30 s}
+\begin{frame}{Annexe : pentes mesurées vs théorie}
+  \centering
+  \small
+  \begin{tabular}{lccl}
+    \toprule
+    Algorithme & Théorie & Mesuré & Lecture \\
+    \midrule
+    Christofides & 3 & \bon{2,8} & conforme \\
+    ACO AS ($m$, $T$ fixés) & 2 & \bon{1,9} & conforme \\
+    ACO MMAS + 2-opt & 2 & \bon{1,9} & la construction domine \\
+    PPV + 2-opt & 2 & \bon{1,8} & PPV $O(n^2)$, 2-opt $O(n)$ mouvements \\
+    Plus proche voisin & 2 & 1,2 & boucle interne vectorisée \\
+    Recuit simulé & 1 à 2 & 1,1 & coût par itération quasi constant \\
+    Held-Karp & $\times 2{,}3$ / ville & \bon{$\times$ 2,1} & exponentiel, conforme \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.3em}
+  \raggedright
+  \begin{itemize}\footnotesize
+    \item Plus proche voisin : une opération sur $n$ valeurs coûte presque autant pour $n = 25$ que
+          pour $n = 1\,600$ (\alert{coûts fixes}) ; la théorie décrit le comportement pour $n$ grand.
+    \item Held-Karp : 1,1 s à $n = 16$ ; extrapolé à $n = 30$ : $\approx 11$ h et
+          \alert{plus de 100 Go} de mémoire.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Annexe : convergence prématurée ($\alpha = 3$)}
+  \centering
+  \includegraphics[width=\textwidth]{premature.png}
+  \raggedright\small
+  $\alpha = 3$ converge en $\approx 10$ itérations (rapide) mais s'arrête à $494$ ;
+  $\alpha = 1$ met $\approx 40$ itérations et atteint $457$. Le facteur de branchement tombe vers 2 :
+  toutes les fourmis suivent la même piste, la recherche s'arrête.
+\end{frame}
+
+\begin{frame}{Annexe : écart à l'optimum (\%) avec un budget de 1 s}
   \centering
   \footnotesize
-  \setlength{\tabcolsep}{6pt}
-  \begin{tabular}{lrrr|rrr}
+  \begin{tabular}{lrrrrr}
     \toprule
-    & \multicolumn{3}{c|}{\textbf{budget 1 s}} & \multicolumn{3}{c}{\textbf{budget 30 s}} \\
-    & eil51 & kroA100 & ch150 & eil51 & kroA100 & ch150 \\
+    & eil51 & kroA100 & ch150 & pcb442 & rat783 \\
     \midrule
-    Plus proche voisin     & 20,0 & 30,7 & 25,5 & 20,0 & 30,7 & 25,5 \\
-    PPV + 2-opt            &  2,1 &  3,0 & \bon{1,4} &  2,1 &  3,0 &  1,4 \\
-    Christofides           &  8,5 &  9,5 & 10,0 &  8,5 &  9,5 & 10,0 \\
-    Recuit simulé          &  2,5 &  2,0 &  6,3 &  1,5 &  0,8 &  0,9 \\
-    OR-Tools               &  1,9 &  0,8 &  2,5 &  0,2 & \bon{0,0} &  0,8 \\
-    2-opt multi-départs    &  1,2 &  1,2 &  5,6 & \bon{0,1} &  0,2 &  2,3 \\
+    Plus proche voisin     & 19,9 & 30,7 & 25,5 & 22,1 & 25,5 \\
+    PPV + 2-opt            & 3,8 & 4,0 & 2,8 & 7,0 & 6,6 \\
+    Christofides           & 8,4 & 9,4 & 10,0 & -- & -- \\
+    Recuit simulé          & 2,5 & 3,2 & 8,2 & 49,2 & 163 \\
+    OR-Tools               & 1,9 & 0,8 & 2,5 & 13,3 & -- \\
+    2-opt multi-départs    & \bon{0,0} & \bon{0,0} & \bon{0,7} & \bon{3,3} & \bon{5,4} \\
     \midrule
-    ACO AS                 &  8,4 & 15,1 & 19,9 &  4,4 &  6,8 &  7,0 \\
-    ACO ACS                &  2,4 & 10,3 & 12,5 &  0,4 &  2,3 &  3,3 \\
-    ACO MMAS               & 38,3 & 109,7 & 165,9 & 0,4 &  1,7 &  1,7 \\
-    ACO MMAS + 2-opt       & \bon{0,1} & \bon{0,2} &  5,2 & \bon{0,1} & \bon{0,0} & \bon{0,3} \\
+    ACO AS                 & 9,4 & 17,5 & 25,9 & 345 & -- \\
+    ACO ACS                & 3,4 & 14,9 & 15,2 & 48,8 & -- \\
+    ACO MMAS               & 57,6 & 122 & 173 & 344 & -- \\
+    ACO MMAS + 2-opt       & 0,2 & 0,1 & 2,2 & 6,1 & -- \\
     \bottomrule
   \end{tabular}
 
   \vspace{0.4em}
   \raggedright\footnotesize
-  Moyenne sur 3 graines ; un algorithme compte si sa solution est obtenue avant le budget (+10 \%).
+  Moyenne sur 3 graines ; un algorithme compte si sa solution est obtenue avant le budget (+10 \%) ;
+  -- : pas encore de solution.
 \end{frame}
 
-\begin{frame}{Annexe : eil51}
+\begin{frame}{Annexe : écart à l'optimum (\%) avec un budget de 60 s}
   \centering
-  \includegraphics[height=0.84\textheight]{anytime_eil51.png}
+  \footnotesize
+  \begin{tabular}{lrrrrr}
+    \toprule
+    & eil51 & kroA100 & ch150 & pcb442 & rat783 \\
+    \midrule
+    Plus proche voisin     & 19,9 & 30,7 & 25,5 & 22,1 & 25,5 \\
+    PPV + 2-opt            & 3,8 & 4,0 & 2,8 & 7,0 & 6,6 \\
+    Christofides           & 8,4 & 9,4 & 10,0 & 8,0 & 14,3 \\
+    Recuit simulé          & 0,9 & 0,7 & 0,9 & 3,2 & 9,0 \\
+    OR-Tools               & 0,2 & \bon{0,0} & 0,8 & 3,8 & \bon{4,1} \\
+    2-opt multi-départs    & \bon{0,0} & \bon{0,0} & 0,3 & \bon{2,7} & 4,7 \\
+    \midrule
+    ACO AS                 & 4,4 & 6,8 & 7,0 & 38,8 & 46,5 \\
+    ACO ACS                & 0,4 & 2,3 & 3,2 & 26,9 & 39,7 \\
+    ACO MMAS               & 0,4 & 1,7 & 1,4 & 180 & 374 \\
+    ACO MMAS + 2-opt       & \bon{0,0} & \bon{0,0} & \bon{0,0} & 3,2 & 5,2 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.4em}
+  \raggedright\footnotesize
+  Itérations de MMAS + 2-opt en 60 s : 3\,450 (eil51), 1\,400 (kroA100), 730 (ch150),
+  123 (pcb442), 45 (rat783).
+\end{frame}
+
+\begin{frame}{Annexe : eil51 (51 villes)}
+  \centering
+  \includegraphics[height=0.86\textheight]{anytime_eil51.png}
+\end{frame}
+
+\begin{frame}{Annexe : kroA100 (100 villes)}
+  \centering
+  \includegraphics[height=0.86\textheight]{anytime_kroA100.png}
+\end{frame}
+
+\begin{frame}{Annexe : pcb442 (442 villes)}
+  \centering
+  \includegraphics[height=0.86\textheight]{anytime_pcb442.png}
 \end{frame}
 
 \begin{frame}[fragile]{Annexe : reproduire les résultats}
@@ -556,9 +605,12 @@
   Code : \texttt{github.com/BalboniIvanoWacheQuentin/using-ACO-for-TSP}
   \begin{itemize}
     \item \texttt{python accuracy\_time.py} : complexité et précision vs temps
-          (\texttt{results/complexity.csv}, \texttt{anytime.csv})
+          (\texttt{results/complexity.csv}, \texttt{anytime\_<instance>.csv}) ;
+          \texttt{python accuracy\_time.py anytime rat783} pour une seule instance
     \item \texttt{python plot\_accuracy\_time.py} : figures et tableau par budget
     \item \texttt{python experiments.py} : étude des paramètres de l'ACO
+    \item \texttt{python dynamic.py} : TSP dynamique, reprise à chaud ou à froid
+          (\texttt{results/dynamic\_<instance>.csv})
     \item \texttt{python slides/make\_figures.py} : figures complémentaires
     \item \texttt{streamlit run streamlit.py} : démonstration interactive (aussi en ligne :
           \nolinkurl{using-aco-for-tsp-faqcu8kd7htkggervtpugk.streamlit.app})

@@ -34,9 +34,9 @@ BASE = dict(alpha=1.0, beta=2.0, rho=0.2, N_ants=20)
 def params_effect(runs):
     aco_runs = runs[runs.algo == "ACO"]
     rnd = runs[runs.algo == "random"]["best_cost"].mean()
-    labels = {"alpha": r"$\alpha$ (poids des phéromones)", "beta": r"$\beta$ (poids de la distance)",
-              "rho": r"$\rho$ (évaporation)", "N_ants": "$m$ (nombre de fourmis)"}
-    fig, axes = plt.subplots(1, 4, figsize=(13, 3.8), sharey=True)
+    labels = {"alpha": r"$\alpha$ (phéromones)", "beta": r"$\beta$ (distance)",
+              "rho": r"$\rho$ (évaporation)", "N_ants": "$m$ (fourmis)"}
+    fig, axes = plt.subplots(1, 4, figsize=(pc.SLIDE_W, 3.2), sharey=True)
     for ax, p in zip(axes, labels):
         others = {k: v for k, v in BASE.items() if k != p}
         mask = np.ones(len(aco_runs), dtype=bool)
@@ -53,42 +53,43 @@ def params_effect(runs):
         ax.set_xticklabels([f"{v:g}" for v in g[p]])
         ax.set_xlabel(labels[p])
         ax.set_yscale("log")
-    axes[0].set_ylabel("meilleure tournée (moyenne ± écart-type)")
+    axes[0].set_ylabel("meilleure tournée")
     for ax in axes:
-        ax.axhline(rnd, color=MUTED, ls="--", lw=1)
-    axes[0].text(0.02, rnd * 0.93, "recherche aléatoire", color=MUTED, fontsize=8,
+        ax.axhline(rnd, color=MUTED, ls="--", lw=1.2)
+    axes[0].text(0.03, rnd * 0.94, "hasard", color=MUTED, fontsize=13,
                  transform=axes[0].get_yaxis_transform(), va="top")
-    axes[0].set_yticks([450, 500, 600, 800, 1000, 1200])
-    axes[0].set_yticklabels(["450", "500", "600", "800", "1000", "1200"])
+    axes[0].set_yticks([450, 600, 800, 1200])
+    axes[0].set_yticklabels(["450", "600", "800", "1200"])
     axes[0].yaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
-    fig.suptitle("Un paramètre change, les autres restent à la référence (cercle orange)",
-                 fontsize=11, color=INK2)
-    fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "params_effect.png"), dpi=180)
+    fig.tight_layout(w_pad=0.6)
+    fig.savefig(os.path.join(OUT, "params_effect.png"), dpi=180, bbox_inches="tight")
     plt.close(fig)
 
 
 def premature(runs, hist):
     aco_runs = runs[(runs.algo == "ACO") & (runs.beta == 2) & (runs.rho == 0.2) & (runs.N_ants == 20)]
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(11, 3.8))
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(pc.SLIDE_W, 3.4))
     for k, alpha in enumerate([1.0, 3.0]):
         ids = aco_runs[aco_runs.alpha == alpha]["run_id"]
         h = hist[hist.run_id.isin(ids)].groupby("iteration")
         best, mean, br = h["best"].mean(), h["mean"].mean(), h["branching"].mean()
-        a1.plot(best.index, best, color=C[k], label=rf"$\alpha={alpha:g}$ : meilleur global")
-        a1.plot(mean.index, mean, color=C[k], lw=1, ls=":", label=rf"$\alpha={alpha:g}$ : moyenne des fourmis")
+        a1.plot(best.index, best, color=C[k], label=rf"$\alpha={alpha:g}$ : meilleure")
+        a1.plot(mean.index, mean, color=C[k], lw=1.4, ls=":", label=rf"$\alpha={alpha:g}$ : moyenne")
         a2.plot(br.index, br, color=C[k], label=rf"$\alpha={alpha:g}$")
     a1.set_xlabel("itération")
-    a1.set_ylabel("longueur de tournée (moy. 10 graines)")
+    a1.set_ylabel("longueur de tournée")
     a1.set_ylim(430, 700)
-    a1.legend(fontsize=8)
-    a2.axhline(2, color=MUTED, ls="--", lw=1)
-    a2.text(100, 2.3, "toutes les fourmis\nsur la même piste", ha="right", va="bottom", fontsize=8, color=MUTED)
+    a1.legend(fontsize=12, labelspacing=0.3)
+    a2.axhline(2, color=MUTED, ls="--", lw=1.2)
+    a2.set_ylim(0, 15.5)
+    a2.set_yticks([2, 5, 10, 15])
+    a2.text(100, 1.6, "toutes les fourmis sur la même piste", ha="right", va="top", fontsize=12,
+            color=MUTED)
     a2.set_xlabel("itération")
     a2.set_ylabel("facteur de branchement")
-    a2.legend(fontsize=8)
+    a2.legend(fontsize=12)
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "premature.png"), dpi=180)
+    fig.savefig(os.path.join(OUT, "premature.png"), dpi=180, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -97,18 +98,18 @@ def aco_vs_random(runs, hist):
     for k, v in BASE.items():
         base = base[base[k] == v]
     rnd = runs[runs.algo == "random"]
-    fig, ax = plt.subplots(figsize=(7.5, 3.8))
-    for col, ids, name in [(C[0], base.run_id, "ACO (Ant System)"), (C[1], rnd.run_id, "recherche aléatoire")]:
+    fig, ax = plt.subplots(figsize=(pc.SLIDE_W / 2, 3.4))
+    for col, ids, name in [(C[0], base.run_id, "ACO"), (C[1], rnd.run_id, "hasard")]:
         h = hist[hist.run_id.isin(ids)].groupby("iteration")["best"]
         m, s = h.mean(), h.std()
         x = m.index * 20
         ax.plot(x, m, color=col, label=name)
         ax.fill_between(x, m - s, m + s, color=col, alpha=0.15, lw=0)
-    ax.set_xlabel("nombre de tournées évaluées")
-    ax.set_ylabel("meilleure tournée (moy. ± é.-t.)")
-    ax.legend()
+    ax.set_xlabel("tournées évaluées")
+    ax.set_ylabel("meilleure tournée")
+    ax.legend(fontsize=12)
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "aco_vs_random.png"), dpi=180)
+    fig.savefig(os.path.join(OUT, "aco_vs_random.png"), dpi=180, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -135,9 +136,37 @@ def tours():
         ax.set_aspect("equal")
     fig.suptitle("kroA100 (optimum prouvé : 21 282)", fontsize=11, color=INK2)
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "tours_kroA100.png"), dpi=180)
+    fig.savefig(os.path.join(OUT, "tours_kroA100.png"), dpi=180, bbox_inches="tight")
     plt.close(fig)
     return nn_cost, best_cost
+
+
+def pheromone_maps():
+    '''carte des pheromones (epaisseur = pheromone, normalisee a chaque iteration), alpha = 1 vs 3'''
+    import algorithms as alg
+    G = alg.generate_tsp(20, p_edges=0.3, seed=42)
+    xy = np.array([G.nodes[i]["pos"] for i in range(20)])
+    fig, axes = plt.subplots(2, 3, figsize=(pc.SLIDE_W, 5.6))
+    for r, alpha in enumerate([1.0, 3.0]):
+        _, cost, hist = alg.ACO_search(G, alpha=alpha, max_iter=100)
+        for ax, it in zip(axes[r], [1, 10, 100]):
+            w = hist["tau"][it - 1] / hist["tau"][it - 1].max()
+            for i in range(20):
+                for j in range(i + 1, 20):
+                    if w[i, j] > 0.05:
+                        ax.plot(*xy[[i, j]].T, color=C[1], lw=5 * w[i, j], alpha=w[i, j])
+            ax.scatter(*xy.T, s=30, color=C[0], zorder=3)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            ax.grid(False)
+            for s in ax.spines.values():
+                s.set_visible(False)
+            if r == 0:
+                ax.set_title(f"itération {it}")
+        axes[r][0].set_ylabel(rf"$\alpha = {alpha:g}$ (coût {cost:.0f})")
+    fig.tight_layout()
+    fig.savefig(os.path.join(OUT, "pheromones.png"), dpi=180, bbox_inches="tight")
+    plt.close(fig)
 
 
 def main():
@@ -148,6 +177,7 @@ def main():
     params_effect(runs)
     premature(runs, hist)
     aco_vs_random(runs, hist)
+    pheromone_maps()
     print("tournees kroA100 :", tours())
     print(f"Figures ecrites dans {OUT}")
 

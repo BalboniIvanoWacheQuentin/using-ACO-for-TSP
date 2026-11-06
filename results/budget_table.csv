@@ -3,149 +3,249 @@ eil51,Plus proche voisin,0.01,19.95
 eil51,Plus proche voisin,0.1,19.95
 eil51,Plus proche voisin,1.0,19.95
 eil51,Plus proche voisin,10.0,19.95
-eil51,Plus proche voisin,30.0,19.95
-eil51,PPV + 2-opt,0.01,2.11
-eil51,PPV + 2-opt,0.1,2.11
-eil51,PPV + 2-opt,1.0,2.11
-eil51,PPV + 2-opt,10.0,2.11
-eil51,PPV + 2-opt,30.0,2.11
+eil51,Plus proche voisin,60.0,19.95
+eil51,PPV + 2-opt,0.01,3.76
+eil51,PPV + 2-opt,0.1,3.76
+eil51,PPV + 2-opt,1.0,3.76
+eil51,PPV + 2-opt,10.0,3.76
+eil51,PPV + 2-opt,60.0,3.76
 eil51,Christofides,0.01,
 eil51,Christofides,0.1,8.45
 eil51,Christofides,1.0,8.45
 eil51,Christofides,10.0,8.45
-eil51,Christofides,30.0,8.45
+eil51,Christofides,60.0,8.45
 eil51,Recuit simulé,0.01,28.25
 eil51,Recuit simulé,0.1,6.65
 eil51,Recuit simulé,1.0,2.5
 eil51,Recuit simulé,10.0,1.49
-eil51,Recuit simulé,30.0,1.49
+eil51,Recuit simulé,60.0,0.86
 eil51,OR-Tools,0.01,
 eil51,OR-Tools,0.1,
 eil51,OR-Tools,1.0,1.88
-eil51,OR-Tools,10.0,0.94
-eil51,OR-Tools,30.0,0.23
-eil51,ACO AS,0.01,93.19
-eil51,ACO AS,0.1,19.09
-eil51,ACO AS,1.0,8.37
-eil51,ACO AS,10.0,5.24
-eil51,ACO AS,30.0,4.38
+eil51,OR-Tools,10.0,1.17
+eil51,OR-Tools,60.0,0.23
+eil51,ACO AS,0.01,
+eil51,ACO AS,0.1,39.59
+eil51,ACO AS,1.0,9.39
+eil51,ACO AS,10.0,5.56
+eil51,ACO AS,60.0,4.38
 eil51,ACO ACS,0.01,
-eil51,ACO ACS,0.1,10.64
-eil51,ACO ACS,1.0,2.43
-eil51,ACO ACS,10.0,0.86
-eil51,ACO ACS,30.0,0.39
-eil51,ACO MMAS,0.01,93.19
-eil51,ACO MMAS,0.1,82.24
-eil51,ACO MMAS,1.0,38.34
+eil51,ACO ACS,0.1,12.99
+eil51,ACO ACS,1.0,3.36
+eil51,ACO ACS,10.0,0.94
+eil51,ACO ACS,60.0,0.39
+eil51,ACO MMAS,0.01,
+eil51,ACO MMAS,0.1,86.38
+eil51,ACO MMAS,1.0,57.59
 eil51,ACO MMAS,10.0,0.55
-eil51,ACO MMAS,30.0,0.39
+eil51,ACO MMAS,60.0,0.39
 eil51,ACO MMAS + 2-opt,0.01,
-eil51,ACO MMAS + 2-opt,0.1,2.27
-eil51,ACO MMAS + 2-opt,1.0,0.08
+eil51,ACO MMAS + 2-opt,0.1,1.56
+eil51,ACO MMAS + 2-opt,1.0,0.23
 eil51,ACO MMAS + 2-opt,10.0,0.08
-eil51,ACO MMAS + 2-opt,30.0,0.08
-eil51,2-opt multi-départs,0.01,
-eil51,2-opt multi-départs,0.1,2.9
-eil51,2-opt multi-départs,1.0,1.17
-eil51,2-opt multi-départs,10.0,0.55
-eil51,2-opt multi-départs,30.0,0.08
+eil51,ACO MMAS + 2-opt,60.0,0.0
+eil51,2-opt multi-départs,0.01,0.55
+eil51,2-opt multi-départs,0.1,0.16
+eil51,2-opt multi-départs,1.0,0.0
+eil51,2-opt multi-départs,10.0,0.0
+eil51,2-opt multi-départs,60.0,0.0
 kroA100,Plus proche voisin,0.01,30.66
 kroA100,Plus proche voisin,0.1,30.66
 kroA100,Plus proche voisin,1.0,30.66
 kroA100,Plus proche voisin,10.0,30.66
-kroA100,Plus proche voisin,30.0,30.66
-kroA100,PPV + 2-opt,0.01,2.99
-kroA100,PPV + 2-opt,0.1,2.99
-kroA100,PPV + 2-opt,1.0,2.99
-kroA100,PPV + 2-opt,10.0,2.99
-kroA100,PPV + 2-opt,30.0,2.99
+kroA100,Plus proche voisin,60.0,30.66
+kroA100,PPV + 2-opt,0.01,3.97
+kroA100,PPV + 2-opt,0.1,3.97
+kroA100,PPV + 2-opt,1.0,3.97
+kroA100,PPV + 2-opt,10.0,3.97
+kroA100,PPV + 2-opt,60.0,3.97
 kroA100,Christofides,0.01,
-kroA100,Christofides,0.1,9.45
+kroA100,Christofides,0.1,
 kroA100,Christofides,1.0,9.45
 kroA100,Christofides,10.0,9.45
-kroA100,Christofides,30.0,9.45
-kroA100,Recuit simulé,0.01,84.09
-kroA100,Recuit simulé,0.1,10.17
-kroA100,Recuit simulé,1.0,1.95
-kroA100,Recuit simulé,10.0,0.78
-kroA100,Recuit simulé,30.0,0.78
+kroA100,Christofides,60.0,9.45
+kroA100,Recuit simulé,0.01,
+kroA100,Recuit simulé,0.1,29.84
+kroA100,Recuit simulé,1.0,3.25
+kroA100,Recuit simulé,10.0,1.61
+kroA100,Recuit simulé,60.0,0.67
 kroA100,OR-Tools,0.01,
-kroA100,OR-Tools,0.1,5.39
-kroA100,OR-Tools,1.0,0.84
-kroA100,OR-Tools,10.0,0.0
-kroA100,OR-Tools,30.0,0.0
+kroA100,OR-Tools,0.1,
+kroA100,OR-Tools,1.0,0.85
+kroA100,OR-Tools,10.0,0.46
+kroA100,OR-Tools,60.0,0.0
 kroA100,ACO AS,0.01,
-kroA100,ACO AS,0.1,100.17
-kroA100,ACO AS,1.0,15.11
-kroA100,ACO AS,10.0,8.39
-kroA100,ACO AS,30.0,6.78
+kroA100,ACO AS,0.1,143.62
+kroA100,ACO AS,1.0,17.53
+kroA100,ACO AS,10.0,10.4
+kroA100,ACO AS,60.0,6.78
 kroA100,ACO ACS,0.01,
-kroA100,ACO ACS,0.1,20.54
-kroA100,ACO ACS,1.0,10.33
-kroA100,ACO ACS,10.0,4.13
-kroA100,ACO ACS,30.0,2.34
+kroA100,ACO ACS,0.1,27.3
+kroA100,ACO ACS,1.0,14.87
+kroA100,ACO ACS,10.0,5.49
+kroA100,ACO ACS,60.0,2.34
 kroA100,ACO MMAS,0.01,
-kroA100,ACO MMAS,0.1,130.57
-kroA100,ACO MMAS,1.0,109.65
-kroA100,ACO MMAS,10.0,6.07
-kroA100,ACO MMAS,30.0,1.7
+kroA100,ACO MMAS,0.1,139.5
+kroA100,ACO MMAS,1.0,122.05
+kroA100,ACO MMAS,10.0,18.42
+kroA100,ACO MMAS,60.0,1.66
 kroA100,ACO MMAS + 2-opt,0.01,
-kroA100,ACO MMAS + 2-opt,0.1,
-kroA100,ACO MMAS + 2-opt,1.0,0.24
+kroA100,ACO MMAS + 2-opt,0.1,1.76
+kroA100,ACO MMAS + 2-opt,1.0,0.06
 kroA100,ACO MMAS + 2-opt,10.0,-0.0
-kroA100,ACO MMAS + 2-opt,30.0,-0.0
-kroA100,2-opt multi-départs,0.01,
-kroA100,2-opt multi-départs,0.1,
-kroA100,2-opt multi-départs,1.0,1.2
-kroA100,2-opt multi-départs,10.0,0.35
-kroA100,2-opt multi-départs,30.0,0.16
+kroA100,ACO MMAS + 2-opt,60.0,-0.0
+kroA100,2-opt multi-départs,0.01,0.74
+kroA100,2-opt multi-départs,0.1,0.21
+kroA100,2-opt multi-départs,1.0,0.02
+kroA100,2-opt multi-départs,10.0,0.0
+kroA100,2-opt multi-départs,60.0,0.0
 ch150,Plus proche voisin,0.01,25.47
 ch150,Plus proche voisin,0.1,25.47
 ch150,Plus proche voisin,1.0,25.47
 ch150,Plus proche voisin,10.0,25.47
-ch150,Plus proche voisin,30.0,25.47
-ch150,PPV + 2-opt,0.01,
-ch150,PPV + 2-opt,0.1,1.41
-ch150,PPV + 2-opt,1.0,1.41
-ch150,PPV + 2-opt,10.0,1.41
-ch150,PPV + 2-opt,30.0,1.41
+ch150,Plus proche voisin,60.0,25.47
+ch150,PPV + 2-opt,0.01,2.83
+ch150,PPV + 2-opt,0.1,2.83
+ch150,PPV + 2-opt,1.0,2.83
+ch150,PPV + 2-opt,10.0,2.83
+ch150,PPV + 2-opt,60.0,2.83
 ch150,Christofides,0.01,
 ch150,Christofides,0.1,
 ch150,Christofides,1.0,10.02
 ch150,Christofides,10.0,10.02
-ch150,Christofides,30.0,10.02
+ch150,Christofides,60.0,10.02
 ch150,Recuit simulé,0.01,
-ch150,Recuit simulé,0.1,17.1
-ch150,Recuit simulé,1.0,6.33
-ch150,Recuit simulé,10.0,0.88
-ch150,Recuit simulé,30.0,0.88
+ch150,Recuit simulé,0.1,46.44
+ch150,Recuit simulé,1.0,8.22
+ch150,Recuit simulé,10.0,2.3
+ch150,Recuit simulé,60.0,0.88
 ch150,OR-Tools,0.01,
-ch150,OR-Tools,0.1,12.55
+ch150,OR-Tools,0.1,
 ch150,OR-Tools,1.0,2.54
-ch150,OR-Tools,10.0,2.1
-ch150,OR-Tools,30.0,0.75
+ch150,OR-Tools,10.0,2.27
+ch150,OR-Tools,60.0,0.75
 ch150,ACO AS,0.01,
 ch150,ACO AS,0.1,179.62
-ch150,ACO AS,1.0,19.85
-ch150,ACO AS,10.0,8.21
-ch150,ACO AS,30.0,6.99
+ch150,ACO AS,1.0,25.95
+ch150,ACO AS,10.0,10.19
+ch150,ACO AS,60.0,6.99
 ch150,ACO ACS,0.01,
-ch150,ACO ACS,0.1,22.5
-ch150,ACO ACS,1.0,12.49
-ch150,ACO ACS,10.0,4.59
-ch150,ACO ACS,30.0,3.29
+ch150,ACO ACS,0.1,
+ch150,ACO ACS,1.0,15.18
+ch150,ACO ACS,10.0,8.18
+ch150,ACO ACS,60.0,3.16
 ch150,ACO MMAS,0.01,
 ch150,ACO MMAS,0.1,179.62
-ch150,ACO MMAS,1.0,165.9
-ch150,ACO MMAS,10.0,24.86
-ch150,ACO MMAS,30.0,1.71
+ch150,ACO MMAS,1.0,172.89
+ch150,ACO MMAS,10.0,78.9
+ch150,ACO MMAS,60.0,1.42
 ch150,ACO MMAS + 2-opt,0.01,
-ch150,ACO MMAS + 2-opt,0.1,
-ch150,ACO MMAS + 2-opt,1.0,5.23
-ch150,ACO MMAS + 2-opt,10.0,0.37
-ch150,ACO MMAS + 2-opt,30.0,0.27
-ch150,2-opt multi-départs,0.01,
-ch150,2-opt multi-départs,0.1,
-ch150,2-opt multi-départs,1.0,5.59
-ch150,2-opt multi-départs,10.0,3.66
-ch150,2-opt multi-départs,30.0,2.29
+ch150,ACO MMAS + 2-opt,0.1,3.74
+ch150,ACO MMAS + 2-opt,1.0,2.23
+ch150,ACO MMAS + 2-opt,10.0,0.02
+ch150,ACO MMAS + 2-opt,60.0,-0.0
+ch150,2-opt multi-départs,0.01,2.75
+ch150,2-opt multi-départs,0.1,1.55
+ch150,2-opt multi-départs,1.0,0.72
+ch150,2-opt multi-départs,10.0,0.45
+ch150,2-opt multi-départs,60.0,0.27
+pcb442,Plus proche voisin,0.01,22.06
+pcb442,Plus proche voisin,0.1,22.06
+pcb442,Plus proche voisin,1.0,22.06
+pcb442,Plus proche voisin,10.0,22.06
+pcb442,Plus proche voisin,60.0,22.06
+pcb442,PPV + 2-opt,0.01,
+pcb442,PPV + 2-opt,0.1,6.98
+pcb442,PPV + 2-opt,1.0,6.98
+pcb442,PPV + 2-opt,10.0,6.98
+pcb442,PPV + 2-opt,60.0,6.98
+pcb442,Christofides,0.01,
+pcb442,Christofides,0.1,
+pcb442,Christofides,1.0,
+pcb442,Christofides,10.0,8.04
+pcb442,Christofides,60.0,8.04
+pcb442,Recuit simulé,0.01,
+pcb442,Recuit simulé,0.1,254.85
+pcb442,Recuit simulé,1.0,49.18
+pcb442,Recuit simulé,10.0,9.15
+pcb442,Recuit simulé,60.0,3.25
+pcb442,OR-Tools,0.01,
+pcb442,OR-Tools,0.1,
+pcb442,OR-Tools,1.0,13.28
+pcb442,OR-Tools,10.0,4.71
+pcb442,OR-Tools,60.0,3.75
+pcb442,ACO AS,0.01,
+pcb442,ACO AS,0.1,
+pcb442,ACO AS,1.0,345.35
+pcb442,ACO AS,10.0,39.1
+pcb442,ACO AS,60.0,38.79
+pcb442,ACO ACS,0.01,
+pcb442,ACO ACS,0.1,
+pcb442,ACO ACS,1.0,48.79
+pcb442,ACO ACS,10.0,29.48
+pcb442,ACO ACS,60.0,26.85
+pcb442,ACO MMAS,0.01,
+pcb442,ACO MMAS,0.1,
+pcb442,ACO MMAS,1.0,344.31
+pcb442,ACO MMAS,10.0,314.97
+pcb442,ACO MMAS,60.0,179.8
+pcb442,ACO MMAS + 2-opt,0.01,
+pcb442,ACO MMAS + 2-opt,0.1,
+pcb442,ACO MMAS + 2-opt,1.0,6.06
+pcb442,ACO MMAS + 2-opt,10.0,4.25
+pcb442,ACO MMAS + 2-opt,60.0,3.24
+pcb442,2-opt multi-départs,0.01,
+pcb442,2-opt multi-départs,0.1,4.17
+pcb442,2-opt multi-départs,1.0,3.33
+pcb442,2-opt multi-départs,10.0,2.88
+pcb442,2-opt multi-départs,60.0,2.66
+rat783,Plus proche voisin,0.01,25.53
+rat783,Plus proche voisin,0.1,25.53
+rat783,Plus proche voisin,1.0,25.53
+rat783,Plus proche voisin,10.0,25.53
+rat783,Plus proche voisin,60.0,25.53
+rat783,PPV + 2-opt,0.01,
+rat783,PPV + 2-opt,0.1,6.61
+rat783,PPV + 2-opt,1.0,6.61
+rat783,PPV + 2-opt,10.0,6.61
+rat783,PPV + 2-opt,60.0,6.61
+rat783,Christofides,0.01,
+rat783,Christofides,0.1,
+rat783,Christofides,1.0,
+rat783,Christofides,10.0,
+rat783,Christofides,60.0,14.29
+rat783,Recuit simulé,0.01,
+rat783,Recuit simulé,0.1,
+rat783,Recuit simulé,1.0,163.38
+rat783,Recuit simulé,10.0,28.9
+rat783,Recuit simulé,60.0,9.04
+rat783,OR-Tools,0.01,
+rat783,OR-Tools,0.1,
+rat783,OR-Tools,1.0,
+rat783,OR-Tools,10.0,17.24
+rat783,OR-Tools,60.0,4.13
+rat783,ACO AS,0.01,
+rat783,ACO AS,0.1,
+rat783,ACO AS,1.0,
+rat783,ACO AS,10.0,167.47
+rat783,ACO AS,60.0,46.54
+rat783,ACO ACS,0.01,
+rat783,ACO ACS,0.1,
+rat783,ACO ACS,1.0,
+rat783,ACO ACS,10.0,41.52
+rat783,ACO ACS,60.0,39.73
+rat783,ACO MMAS,0.01,
+rat783,ACO MMAS,0.1,
+rat783,ACO MMAS,1.0,
+rat783,ACO MMAS,10.0,411.78
+rat783,ACO MMAS,60.0,374.11
+rat783,ACO MMAS + 2-opt,0.01,
+rat783,ACO MMAS + 2-opt,0.1,
+rat783,ACO MMAS + 2-opt,1.0,
+rat783,ACO MMAS + 2-opt,10.0,6.34
+rat783,ACO MMAS + 2-opt,60.0,5.25
+rat783,2-opt multi-départs,0.01,
+rat783,2-opt multi-départs,0.1,6.2
+rat783,2-opt multi-départs,1.0,5.42
+rat783,2-opt multi-départs,10.0,4.99
+rat783,2-opt multi-départs,60.0,4.66

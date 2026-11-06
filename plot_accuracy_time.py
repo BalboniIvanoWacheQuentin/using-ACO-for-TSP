@@ -1,5 +1,5 @@
 '''
-Figures et tableaux a partir de results/complexity.csv et results/anytime.csv.
+Figures et tableaux a partir de results/complexity.csv et results/anytime_<instance>.csv.
 
     python plot_accuracy_time.py
 
@@ -9,6 +9,7 @@ Produit :
   results/complexity_slopes.csv          pentes mesurees
   results/budget_table.csv               ecart atteint par chaque algorithme pour un budget de temps donne
 '''
+import glob
 import os
 
 import numpy as np
@@ -24,9 +25,10 @@ RES = os.path.join(HERE, "results")
 FIG = os.path.join(RES, "figures")
 C, INK2, MUTED, SURF = pc.C, pc.INK2, pc.MUTED, pc.SURF
 
-BUDGETS = [0.01, 0.1, 1, 10, 30]
+BUDGETS = [0.01, 0.1, 1, 10, 60]
 TOL = 1.1          # un budget B accepte un depassement de 10 % (meme regle pour tous)
-GRID = np.logspace(-3, np.log10(30), 200)
+GRID = np.logspace(-3, np.log10(60), 200)
+INSTANCE_ORDER = ["eil51", "kroA100", "ch150", "pcb442", "rat783"]
 
 # ordre et couleur fixes ; les algorithmes "a un coup" sont en gris avec etiquette
 STYLE = {
@@ -38,7 +40,7 @@ ANYTIME = ["ACO AS", "ACO ACS", "ACO MMAS", "ACO MMAS + 2-opt", "2-opt multi-dé
 BUDGETED = ["Recuit simulé", "OR-Tools"]
 
 THEORY = {   # pente theorique attendue en log-log (temps vs n)
-    "Plus proche voisin": "2", "PPV + 2-opt": "2 par passe (~3 au total)", "Christofides": "3",
+    "Plus proche voisin": "2", "PPV + 2-opt": "2 (PPV) ; 2-opt : O(n) mouvements", "Christofides": "3",
     "Recuit simulé": "1 à 2 (n it. x (O(1) + inversion O(n)))", "ACO AS (10 it.)": "2 (m fixe)",
     "ACO MMAS + 2-opt (10 it.)": "2 + 2-opt",
 }
@@ -55,7 +57,7 @@ def complexity():
     df = pd.read_csv(os.path.join(RES, "complexity.csv"))
     poly = df[df.algo != "Held-Karp (exact)"]
     hk = df[df.algo == "Held-Karp (exact)"]
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(12, 4.8), gridspec_kw={"width_ratios": [1.6, 1]})
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(pc.SLIDE_W, 4.5), gridspec_kw={"width_ratios": [1.7, 1]})
     slopes = []
     for k, algo in enumerate(poly.algo.unique()):
         d = poly[poly.algo == algo].sort_values("n")
@@ -63,8 +65,10 @@ def complexity():
         h = max(3, len(x) // 2)
         s = np.polyfit(np.log(x[-h:]), np.log(y[-h:]), 1)[0]
         slopes.append((algo, round(s, 2), THEORY.get(algo, "")))
-        a1.plot(x, y, "o-", color=C[k], ms=5, markeredgecolor=SURF, markeredgewidth=1.2,
-                label=f"{algo} : pente {s:.1f}")
+        dashed = algo.startswith("ACO AS")        # presque confondu avec MMAS + 2-opt
+        a1.plot(x, y, "s--" if dashed else "o-", color=C[k], markeredgecolor=SURF, markeredgewidth=1.2,
+                label=f"{algo.replace(' (10 it.)', '')} ({s:.1f})".replace(".", ","),
+                zorder=3 if dashed else 2)
     xs = sorted(poly.n.unique())
     a1.set_xscale("log")
     a1.set_yscale("log")
@@ -72,23 +76,23 @@ def complexity():
     a1.set_xticklabels([str(v) for v in xs])
     a1.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     a1.set_xlabel("nombre de villes n")
-    a1.set_ylabel("temps de calcul (s)")
-    a1.set_title("Algorithmes polynomiaux (log-log)")
-    a1.legend(fontsize=8, loc="upper left")
+    a1.set_ylabel("temps (s)")
+    a1.set_title("Polynomiaux (log-log ; pente)")
 
     x, y = hk.n.values, hk.time_s.values
     big = x >= 10
     b = np.polyfit(x[big], np.log2(y[big]), 1)[0]
-    a2.plot(x, y, "o-", color=C[7], ms=5, markeredgecolor=SURF, markeredgewidth=1.2,
-            label=f"mesuré : x{2 ** b:.1f} par ville ajoutée")
+    a2.plot(x, y, "o-", color=C[7], markeredgecolor=SURF, markeredgewidth=1.2,
+            label=f"×{2 ** b:.1f} par ville".replace(".", ","))
     a2.set_yscale("log")
     a2.set_xlabel("nombre de villes n")
-    a2.set_ylabel("temps de calcul (s)")
-    a2.set_title("Held-Karp (exact) : exponentiel")
-    a2.legend(fontsize=8, loc="upper left")
+    a2.set_title("Held-Karp : exponentiel")
+    a2.legend(fontsize=12.5, loc="upper left", handlelength=1.4)
     slopes.append(("Held-Karp (exact)", f"x{2 ** b:.2f} par ville", "O(n² 2ⁿ) : x2,3 vers n = 15"))
-    fig.tight_layout()
-    fig.savefig(os.path.join(FIG, "complexity_all.png"), dpi=170)
+    fig.legend(*a1.get_legend_handles_labels(), loc="lower center", ncol=3, fontsize=12.5,
+               handlelength=1.8, columnspacing=1.2, labelspacing=0.3)
+    fig.tight_layout(rect=(0, 0.17, 1, 1))
+    fig.savefig(os.path.join(FIG, "complexity_all.png"), dpi=170, bbox_inches="tight")
     plt.close(fig)
     pd.DataFrame(slopes, columns=["algo", "pente_mesuree", "theorie"]).to_csv(
         os.path.join(RES, "complexity_slopes.csv"), index=False)
@@ -99,7 +103,7 @@ def complexity():
 def anytime_curves(df, inst):
     d = df[df.instance == inst]
     opt = d.opt.iloc[0]
-    fig, ax = plt.subplots(figsize=(10, 5.4))
+    fig, ax = plt.subplots(figsize=(pc.SLIDE_W, 4.7))
     for algo in ANYTIME:
         a = d[d.algo == algo]
         curves = []
@@ -120,26 +124,27 @@ def anytime_curves(df, inst):
             g = a.groupby("cfg").agg(t=("time_s", "mean"), gap=("gap", "median"))
         else:
             g = a.rename(columns={"time_s": "t"})[["t", "gap"]]
-        ax.plot(g.t, g.gap, "s--", color=STYLE[algo], ms=6, lw=1.2, label=algo,
+        g = g[g.t <= GRID[-1] * TOL]                 # hors budget : non trace
+        ax.plot(g.t, g.gap, "s--", color=STYLE[algo], lw=1.6, label=algo,
                 markeredgecolor=SURF, markeredgewidth=1.2)
     for algo in SINGLE:
         a = d[d.algo == algo].iloc[0]
         gap = 100 * (a.cost / opt - 1)
-        ax.plot(a.time_s, gap, "D", color=pc.INK, ms=6, markeredgecolor=SURF, markeredgewidth=1.2)
-        ax.annotate(algo, (a.time_s, gap), xytext=(6, 4), textcoords="offset points", fontsize=8,
+        ax.plot(a.time_s, gap, "D", color=pc.INK, markeredgecolor=SURF, markeredgewidth=1.2)
+        ax.annotate(algo, (a.time_s, gap), xytext=(7, 5), textcoords="offset points", fontsize=12,
                     color=INK2)
     ax.set_xscale("log")
     ax.set_yscale("symlog", linthresh=1)
-    ax.set_yticks([0, 0.5, 1, 2, 5, 10, 20, 50])
-    ax.set_yticklabels(["0 (optimum)", "0,5", "1", "2", "5", "10", "20", "50"])
-    ax.set_ylim(-0.05, 60)
-    ax.set_xlim(5e-5, 40)
+    ax.set_yticks([0, 0.5, 1, 2, 5, 10, 20, 50, 100])
+    ax.set_yticklabels(["0", "0,5", "1", "2", "5", "10", "20", "50", "100"])
+    ax.set_ylim(-0.05, 150)
+    ax.set_xlim(2e-4, 80)
     ax.set_xlabel("temps de calcul (s, échelle log)")
     ax.set_ylabel("écart à l'optimum (%)")
-    ax.set_title(f"{inst} (n = {d.n.iloc[0]}) : précision vs temps, un seul cœur CPU")
-    ax.legend(fontsize=8, loc="lower left", ncol=2)
-    fig.tight_layout()
-    fig.savefig(os.path.join(FIG, f"anytime_{inst}.png"), dpi=170)
+    fig.legend(*ax.get_legend_handles_labels(), loc="lower center", ncol=4, fontsize=12.5,
+               handlelength=1.6, labelspacing=0.3, columnspacing=1.0)
+    fig.tight_layout(rect=(0, 0.17, 1, 1))
+    fig.savefig(os.path.join(FIG, f"anytime_{inst}.png"), dpi=170, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -173,9 +178,12 @@ def main():
     if os.path.exists(os.path.join(RES, "complexity.csv")):
         for s in complexity():
             print(s)
-    if os.path.exists(os.path.join(RES, "anytime.csv")):
-        df = pd.read_csv(os.path.join(RES, "anytime.csv"))
-        for inst in df.instance.unique():
+    files = glob.glob(os.path.join(RES, "anytime_*.csv"))
+    if files:
+        df = pd.concat([pd.read_csv(f) for f in files])
+        order = [i for i in INSTANCE_ORDER if i in set(df.instance)]
+        df = df.sort_values("instance", key=lambda s: s.map(order.index), kind="stable")
+        for inst in order:
             anytime_curves(df, inst)
         t = budget_table(df)
         pd.set_option("display.width", 200)

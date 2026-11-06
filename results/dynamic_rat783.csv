@@ -1,0 +1,95 @@
+instance,seed,algo,time_s,cost
+rat783,-1,reference,60.00000,9826.0
+rat783,0,OR-Tools (à froid),0.11751,inf
+rat783,0,OR-Tools (à froid),0.35587,inf
+rat783,0,OR-Tools (à froid),1.71620,11777.0
+rat783,0,OR-Tools (à froid),3.04556,11135.0
+rat783,0,OR-Tools (à froid),10.01500,10391.0
+rat783,0,OR-Tools (à froid),20.01603,10058.0
+rat783,0,ancienne tournée (sans rien faire),0.00000,10951.0
+rat783,0,ACO MMAS + 2-opt (à chaud),1.29618,10132.0
+rat783,0,ACO MMAS + 2-opt (à chaud),5.17162,10084.001
+rat783,0,ACO MMAS + 2-opt (à chaud),9.10034,10062.0
+rat783,0,ACO MMAS + 2-opt (à chaud),11.57751,10051.999
+rat783,0,ACO MMAS + 2-opt (à chaud),15.32555,10049.001
+rat783,0,ACO MMAS + 2-opt (à chaud),16.58842,10042.001
+rat783,0,ACO MMAS + 2-opt (à chaud),20.49992,10008.0
+rat783,0,ACO MMAS + 2-opt (à chaud),20.49992,10008.0
+rat783,0,2-opt sur l'ancienne tournée,0.03014,9894.0
+rat783,0,OR-Tools (à chaud),0.93726,10951.0
+rat783,0,OR-Tools (à chaud),0.97148,10951.0
+rat783,0,OR-Tools (à chaud),1.83203,10327.0
+rat783,0,OR-Tools (à chaud),3.02750,10205.0
+rat783,0,OR-Tools (à chaud),10.02635,9903.0
+rat783,0,OR-Tools (à chaud),20.02749,9859.0
+rat783,0,ACO MMAS + 2-opt (à froid),1.30228,10149.0
+rat783,0,ACO MMAS + 2-opt (à froid),2.61327,10062.999
+rat783,0,ACO MMAS + 2-opt (à froid),15.85055,10056.0
+rat783,0,ACO MMAS + 2-opt (à froid),20.07632,10056.0
+rat783,0,2-opt multi-départs (à froid),0.03914,10177.0
+rat783,0,2-opt multi-départs (à froid),0.04954,10011.0
+rat783,0,2-opt multi-départs (à froid),0.49102,9997.0
+rat783,0,2-opt multi-départs (à froid),0.97623,9967.0
+rat783,0,2-opt multi-départs (à froid),6.31052,9941.0
+rat783,0,2-opt multi-départs (à froid),20.01032,9941.0
+rat783,1,ancienne tournée (sans rien faire),0.00000,11027.0
+rat783,1,ACO MMAS + 2-opt (à chaud),1.28720,10147.0
+rat783,1,ACO MMAS + 2-opt (à chaud),3.76845,10037.0
+rat783,1,ACO MMAS + 2-opt (à chaud),17.05109,10029.999
+rat783,1,ACO MMAS + 2-opt (à chaud),19.54054,10007.0
+rat783,1,ACO MMAS + 2-opt (à chaud),20.86582,10007.0
+rat783,1,2-opt sur l'ancienne tournée,0.03032,10050.0
+rat783,1,OR-Tools (à chaud),0.98703,11027.0
+rat783,1,OR-Tools (à chaud),1.04454,11027.0
+rat783,1,OR-Tools (à chaud),1.04220,11027.0
+rat783,1,OR-Tools (à chaud),3.02980,10409.0
+rat783,1,OR-Tools (à chaud),10.02847,10142.0
+rat783,1,OR-Tools (à chaud),20.02550,10072.0
+rat783,1,ACO MMAS + 2-opt (à froid),1.37766,10175.0
+rat783,1,ACO MMAS + 2-opt (à froid),2.73910,10164.999
+rat783,1,ACO MMAS + 2-opt (à froid),13.37485,10116.999
+rat783,1,ACO MMAS + 2-opt (à froid),17.06887,10114.0
+rat783,1,ACO MMAS + 2-opt (à froid),20.87252,10100.001
+rat783,1,ACO MMAS + 2-opt (à froid),20.87252,10100.001
+rat783,1,2-opt multi-départs (à froid),0.03860,10206.0
+rat783,1,2-opt multi-départs (à froid),0.04815,10143.0
+rat783,1,2-opt multi-départs (à froid),0.06666,10043.0
+rat783,1,2-opt multi-départs (à froid),0.22610,9999.0
+rat783,1,2-opt multi-départs (à froid),0.46098,9979.0
+rat783,1,2-opt multi-départs (à froid),2.67118,9968.0
+rat783,1,2-opt multi-départs (à froid),6.96280,9967.0
+rat783,1,2-opt multi-départs (à froid),8.87000,9960.0
+rat783,1,2-opt multi-départs (à froid),10.35793,9957.0
+rat783,1,2-opt multi-départs (à froid),14.85050,9950.0
+rat783,1,2-opt multi-départs (à froid),20.00763,9950.0
+rat783,2,ancienne tournée (sans rien faire),0.00000,11166.0
+rat783,2,ACO MMAS + 2-opt (à chaud),1.32491,10149.0
+rat783,2,ACO MMAS + 2-opt (à chaud),2.68034,10125.001
+rat783,2,ACO MMAS + 2-opt (à chaud),4.02573,10093.0
+rat783,2,ACO MMAS + 2-opt (à chaud),10.65235,10072.001
+rat783,2,ACO MMAS + 2-opt (à chaud),13.31756,10054.999
+rat783,2,ACO MMAS + 2-opt (à chaud),15.92056,10039.0
+rat783,2,ACO MMAS + 2-opt (à chaud),19.89971,9978.0
+rat783,2,ACO MMAS + 2-opt (à chaud),21.19747,9978.0
+rat783,2,2-opt sur l'ancienne tournée,0.02989,10092.0
+rat783,2,OR-Tools (à chaud),0.90603,11166.0
+rat783,2,OR-Tools (à chaud),0.95475,11166.0
+rat783,2,OR-Tools (à chaud),1.02467,10570.0
+rat783,2,OR-Tools (à chaud),3.02684,10354.0
+rat783,2,OR-Tools (à chaud),10.02740,10069.0
+rat783,2,OR-Tools (à chaud),20.02777,10020.0
+rat783,2,ACO MMAS + 2-opt (à froid),1.40714,10148.0
+rat783,2,ACO MMAS + 2-opt (à froid),2.78942,10137.001
+rat783,2,ACO MMAS + 2-opt (à froid),4.13603,10089.0
+rat783,2,ACO MMAS + 2-opt (à froid),6.80745,10042.0
+rat783,2,ACO MMAS + 2-opt (à froid),20.54077,10042.0
+rat783,2,2-opt multi-départs (à froid),0.04570,10166.0
+rat783,2,2-opt multi-départs (à froid),0.05805,10109.0
+rat783,2,2-opt multi-départs (à froid),0.06735,10093.0
+rat783,2,2-opt multi-départs (à froid),0.08643,10058.0
+rat783,2,2-opt multi-départs (à froid),0.19161,10047.0
+rat783,2,2-opt multi-départs (à froid),0.26306,9985.0
+rat783,2,2-opt multi-départs (à froid),0.37651,9982.0
+rat783,2,2-opt multi-départs (à froid),0.50708,9973.0
+rat783,2,2-opt multi-départs (à froid),0.51658,9934.0
+rat783,2,2-opt multi-départs (à froid),20.00146,9934.0

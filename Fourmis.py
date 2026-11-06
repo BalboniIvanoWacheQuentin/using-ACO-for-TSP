@@ -254,6 +254,25 @@ if "resultat" in st.session_state:
     )
     col_c2.line_chart({"facteur de branchement": hist["branching"]})
 
+    # --------------------------------------------------------
+    #  Evolution des pheromones : epaisseur d'une arete = sa pheromone
+    # --------------------------------------------------------
+    st.subheader("Évolution des phéromones")
+    it = st.slider("Itération", 1, len(best), 1)
+    tau = hist["tau"][it - 1]
+    w = tau / tau.max()                       # normalise a chaque iteration
+    xy = np.array([pos[i] for i in range(len(tau))])
+    fig, ax = plt.subplots(figsize=(6, 6))
+    for i in range(len(tau)):
+        for j in range(i + 1, len(tau)):
+            if w[i, j] > 0.05:
+                ax.plot(*xy[[i, j]].T, color="#e74c3c", lw=6 * w[i, j], alpha=w[i, j])
+    ax.scatter(*xy.T, s=60, color="#3498db", zorder=3)
+    ax.set_title(f"Itération {it} : plus l'arête est épaisse, plus elle a de phéromone")
+    ax.axis("off")
+    st.pyplot(fig)
+    plt.close(fig)
+
  
  
 
