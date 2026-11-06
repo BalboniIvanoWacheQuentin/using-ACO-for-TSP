@@ -1,0 +1,47 @@
+algo,n,time_s,cost
+Plus proche voisin,25,0.000107,572.135
+PPV + 2-opt,25,0.002226,465.682
+Christofides,25,0.004440,488.119
+Recuit simulé,25,0.158550,452.146
+ACO AS (10 it.),25,0.040183,484.027
+ACO MMAS + 2-opt (10 it.),25,0.078877,452.146
+Plus proche voisin,50,0.000227,721.511
+PPV + 2-opt,50,0.003750,609.753
+Christofides,50,0.023811,623.611
+Recuit simulé,50,0.322654,584.781
+ACO AS (10 it.),50,0.087995,653.744
+ACO MMAS + 2-opt (10 it.),50,0.220021,579.065
+Plus proche voisin,100,0.000454,1013.317
+PPV + 2-opt,100,0.009703,809.381
+Christofides,100,0.081810,880.707
+Recuit simulé,100,0.677314,812.495
+ACO AS (10 it.),100,0.226700,1028.17
+ACO MMAS + 2-opt (10 it.),100,0.937029,798.841
+Plus proche voisin,200,0.000721,1355.627
+PPV + 2-opt,200,0.030317,1160.995
+Christofides,200,0.539803,1196.383
+Recuit simulé,200,1.391978,1142.122
+ACO AS (10 it.),200,0.670010,1488.083
+ACO MMAS + 2-opt (10 it.),200,5.819972,1115.879
+Plus proche voisin,400,0.001913,1915.675
+PPV + 2-opt,400,0.247288,1565.161
+Christofides,400,4.353421,1654.472
+Recuit simulé,400,3.018297,1614.979
+ACO AS (10 it.),400,2.134360,2311.866
+ACO MMAS + 2-opt (10 it.),400,46.591597,1547.127
+Plus proche voisin,800,0.004640,2636.068
+PPV + 2-opt,800,1.742131,2198.913
+Recuit simulé,800,5.984744,2363.662
+ACO AS (10 it.),800,7.386628,3751.806
+ACO MMAS + 2-opt (10 it.),800,417.840647,2229.64
+Held-Karp (exact),6,0.000510,315.098
+Held-Karp (exact),7,0.000963,320.439
+Held-Karp (exact),8,0.001876,320.447
+Held-Karp (exact),9,0.004287,327.377
+Held-Karp (exact),10,0.007856,327.921
+Held-Karp (exact),11,0.018489,330.949
+Held-Karp (exact),12,0.035243,341.334
+Held-Karp (exact),13,0.070040,346.949
+Held-Karp (exact),14,0.156637,375.035
+Held-Karp (exact),15,0.320322,377.305
+Held-Karp (exact),16,0.679613,378.449

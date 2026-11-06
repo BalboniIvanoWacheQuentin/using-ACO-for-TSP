@@ -83,59 +83,98 @@ def tour_cost(tour, pos):
         for i in range(n)
     )
 
-def random_search(G, max_iter=2000):
-    '''Recherche la tournee la plus courte de facon aleatoire'''
-    pos = nx.get_node_attributes(G, "pos")
-    nodes = list(G.nodes())
+def distance_matrix(G):
+    '''
+    Matrice (n x n) des distances euclidiennes entre toutes les villes.
+    NB : l'ACO et la recherche aleatoire travaillent sur le graphe COMPLET
+    (TSP euclidien classique) ; les aretes de G ne servent qu'a l'affichage.
+    '''
+    coords = np.array([G.nodes[i]["pos"] for i in range(G.number_of_nodes())])
+    return np.linalg.norm(coords[:, None, :] - coords[None, :, :], axis=-1)
+
+def random_search(G, max_iter=2000, seed=42):
+    '''
+    Recherche la tournee la plus courte de facon aleatoire.
+    Renvoie (best_tour, best_cost, history) ; history[k] = meilleur cout apres k+1 tournees evaluees.
+    '''
+    np.random.seed(seed)
+    dist = distance_matrix(G)
+    n = len(dist)
     best_tour, best_cost = None, float("inf")
+    history = []
 
     for _ in range(max_iter):
-        tour = list(np.random.permutation(nodes))
-        cost = tour_cost(tour, pos)
+        tour = list(np.random.permutation(n))
+        cost = float(dist[tour, np.roll(tour, -1)].sum())
         if cost < best_cost:
             best_cost, best_tour = cost, tour
+        history.append(best_cost)
 
-    return best_tour, best_cost
+    return best_tour, best_cost, history
+
+def branching_factor(pheromones, lam=0.05):
+    '''
+    Facteur de lambda-branchement moyen (Dorigo & Gambardella) : nombre moyen d'aretes
+    par ville dont la pheromone depasse tau_min + lam * (tau_max - tau_min).
+    Vaut n-1 au depart (tout est egal) et tend vers 2 quand la colonie a converge (stagnation).
+    '''
+    tau = pheromones.astype(float).copy()
+    np.fill_diagonal(tau, np.nan)
+    lo = np.nanmin(tau, axis=1, keepdims=True)
+    hi = np.nanmax(tau, axis=1, keepdims=True)
+    return float(np.mean((tau >= lo + lam * (hi - lo)).sum(axis=1)))
 
 def ACO_search(G, N_ants=20, max_iter=100, alpha=1.0, beta=2.0, rho=0.2, Q=100.0, seed=42):
+    '''
+    Ant System sur le graphe complet.
+    Renvoie (best_tour, best_cost, history) ou history contient une valeur par iteration :
+      best      : meilleur cout trouve depuis le debut
+      iter_best : meilleur cout parmi les fourmis de l'iteration
+      mean      : cout moyen des fourmis de l'iteration
+      branching : facteur de lambda-branchement (diversite de la recherche)
+      time      : temps ecoule depuis le debut (s)
+    '''
     random.seed(seed)
     np.random.seed(seed)
-    pos = nx.get_node_attributes(G, "pos")
-    nodes = list(G.nodes())
-    n = len(nodes)
+    dist = distance_matrix(G)
+    n = len(dist)
+
+    # Heuristique eta = 1/d calculee une seule fois (0 si d == 0, comme avant)
+    with np.errstate(divide="ignore"):
+        eta = np.where(dist > 0, 1.0 / dist, 0.0)
+    eta_beta = eta ** beta
 
     pheromones = np.ones((n, n)) * 0.1
     best_tour, best_cost = None, float("inf")
+    history = {"best": [], "iter_best": [], "mean": [], "branching": [], "time": []}
+    t0 = time.perf_counter()
 
     for _ in range(max_iter):
         ant_tours, ant_costs = [], []
+        # Attractivite de chaque arete pour cette iteration : tau^alpha * eta^beta
+        weights = (pheromones ** alpha) * eta_beta
+
         for _ in range(N_ants):
-            curr = random.choice(nodes)
-            tour, unvisited = [curr], set(nodes) - {curr}
+            curr = random.randrange(n)
+            tour = [curr]
+            unvisited = np.ones(n, dtype=bool)
+            unvisited[curr] = False
 
-            while unvisited:
-                targets = list(unvisited)
-                probs = []
-
-                for nxt in targets:
-                    d = float(np.linalg.norm(pos[curr] - pos[nxt]))
-                    eta = 1.0 / d if d > 0 else 0
-                    probs.append(
-                        (pheromones[curr][nxt] ** alpha) * (eta**beta)
-                    )
-
-                s = sum(probs)
-                nxt = (
-                    random.choice(targets)
+            for _ in range(n - 1):
+                targets = np.flatnonzero(unvisited)
+                probs = weights[curr, targets]
+                s = probs.sum()
+                nxt = int(
+                    np.random.choice(targets)
                     if s == 0
-                    else np.random.choice(targets, p=[p / s for p in probs])
+                    else np.random.choice(targets, p=probs / s)
                 )
 
                 tour.append(nxt)
-                unvisited.remove(nxt)
+                unvisited[nxt] = False
                 curr = nxt
 
-            cost = tour_cost(tour, pos)
+            cost = float(dist[tour, np.roll(tour, -1)].sum())
             ant_tours.append(tour)
             ant_costs.append(cost)
 
@@ -150,7 +189,30 @@ def ACO_search(G, N_ants=20, max_iter=100, alpha=1.0, beta=2.0, rho=0.2, Q=100.0
                 pheromones[u][v] += deposit
                 pheromones[v][u] += deposit
 
-    return best_tour, best_cost
+        history["best"].append(best_cost)
+        history["iter_best"].append(min(ant_costs))
+        history["mean"].append(float(np.mean(ant_costs)))
+        history["branching"].append(branching_factor(pheromones))
+        history["time"].append(time.perf_counter() - t0)
+
+    return best_tour, best_cost, history
+
+def plot_convergence(history, filename, title="ACO - convergence"):
+    '''Trace l'evolution du cout et du facteur de branchement au fil des iterations'''
+    it = range(1, len(history["best"]) + 1)
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(9, 7), sharex=True)
+    ax1.plot(it, history["mean"], label="cout moyen des fourmis", alpha=0.6)
+    ax1.plot(it, history["iter_best"], label="meilleur de l'iteration", alpha=0.6)
+    ax1.plot(it, history["best"], label="meilleur global", linewidth=2)
+    ax1.set_ylabel("longueur de tournee")
+    ax1.set_title(title)
+    ax1.legend()
+    ax2.plot(it, history["branching"], color="tab:purple")
+    ax2.set_ylabel("facteur de branchement")
+    ax2.set_xlabel("iteration")
+    fig.tight_layout()
+    fig.savefig(filename, bbox_inches="tight")
+    plt.close(fig)
 
 def save_tour(G, pos, tour, cost, exec_time, algo_name, filename):
     ''' Enregistre le tour dans un fichier'''
@@ -181,12 +243,13 @@ if __name__ == "__main__":
 
     #Random Search
     t0 = time.perf_counter()
-    rand_tour, rand_cost = random_search(tsp, max_iter=150000)
+    rand_tour, rand_cost, _ = random_search(tsp, max_iter=150000)
     t_rand = time.perf_counter() - t0
     save_tour(tsp, pos, rand_tour, rand_cost, t_rand, "Random Search", "random_search_tour.svg")
 
     #ACO
     t0 = time.perf_counter()
-    aco_tour, aco_cost = ACO_search(tsp)
+    aco_tour, aco_cost, aco_history = ACO_search(tsp)
     t_aco = time.perf_counter() - t0
     save_tour(tsp, pos, aco_tour, aco_cost, t_aco, "ACO Search", "aco_search_tour.svg")
+    plot_convergence(aco_history, "aco_convergence.svg")
