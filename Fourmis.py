@@ -160,6 +160,18 @@ if lancer:
         )
         t_exec = time.perf_counter() - t0
 
+        # Recherche aleatoire avec le meme budget : nb_fourmis tournees par iteration
+        rng = np.random.default_rng(graine)
+        D = distance_matrix(G)
+        rand_tour, rand_cost, rand_hist = None, float("inf"), []
+        for _ in range(nb_iterations):
+            for _ in range(nb_fourmis):
+                t = rng.permutation(len(D))
+                c = float(D[t, np.roll(t, -1)].sum())
+                if c < rand_cost:
+                    rand_tour, rand_cost = t, c
+            rand_hist.append((rand_tour, rand_cost))   # meilleur cycle depuis le debut
+
         status.update(
             label=f"✅ Terminé en {t_exec:.2f} s",
             state="complete",
@@ -170,6 +182,7 @@ if lancer:
         "cost": cost,
         "temps": t_exec,
         "history": history,
+        "random": rand_hist,
         "algo": "ACO",
         "params": {"nb_fourmis": nb_fourmis, "nb_iterations": nb_iterations,
                    "alpha": alpha, "beta": beta, "rho": rho, "Q": Q},
@@ -250,27 +263,40 @@ if "resultat" in st.session_state:
     col_c1.line_chart(
         {"meilleur global": best,
          "meilleur de l'itération": hist["iter_best"],
-         "moyenne des fourmis": hist["mean"]},
+         "moyenne des fourmis": hist["mean"],
+         "hasard (même budget)": [c for _, c in st.session_state["resultat"]["random"]]},
     )
     col_c2.line_chart({"facteur de branchement": hist["branching"]})
 
     # --------------------------------------------------------
-    #  Evolution des pheromones : epaisseur d'une arete = sa pheromone
+    #  Evolution au fil des iterations : pheromones de l'ACO vs meilleur cycle du hasard
     # --------------------------------------------------------
-    st.subheader("Évolution des phéromones")
+    st.subheader("Évolution au fil des itérations")
     it = st.slider("Itération", 1, len(best), 1)
     tau = hist["tau"][it - 1]
     w = tau / tau.max()                       # normalise a chaque iteration
     xy = np.array([pos[i] for i in range(len(tau))])
-    fig, ax = plt.subplots(figsize=(6, 6))
+    col_e1, col_e2 = st.columns(2)
+
+    fig, ax = plt.subplots(figsize=(5, 5))
     for i in range(len(tau)):
         for j in range(i + 1, len(tau)):
             if w[i, j] > 0.05:
                 ax.plot(*xy[[i, j]].T, color="#e74c3c", lw=6 * w[i, j], alpha=w[i, j])
     ax.scatter(*xy.T, s=60, color="#3498db", zorder=3)
-    ax.set_title(f"Itération {it} : plus l'arête est épaisse, plus elle a de phéromone")
+    ax.set_title(f"ACO : phéromones (épaisseur), meilleur {best[it - 1]:.0f}")
     ax.axis("off")
-    st.pyplot(fig)
+    col_e1.pyplot(fig)
+    plt.close(fig)
+
+    rand_tour, rand_cost = st.session_state["resultat"]["random"][it - 1]
+    cycle = list(rand_tour) + [rand_tour[0]]
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.plot(*xy[cycle].T, color="#e74c3c", lw=2.5)
+    ax.scatter(*xy.T, s=60, color="#3498db", zorder=3)
+    ax.set_title(f"Hasard : meilleur cycle, {rand_cost:.0f}")
+    ax.axis("off")
+    col_e2.pyplot(fig)
     plt.close(fig)
 
  
